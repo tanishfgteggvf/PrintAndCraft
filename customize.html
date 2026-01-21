@@ -203,28 +203,36 @@
     const name = document.getElementById('custName').value;
     const needs = document.getElementById('custNeeds').value;
     
-    // 1. Prepare Data
-    const orderDetails = {
-        customer_name: name,
-        product_type: selectedProduct,
-        details: `Material: ${material}, Notes: ${needs}`, // Simplified for example
-        created_at: new Date()
-    };
-
-    // 2. SAVE TO BACKEND (The magic happens here)
-    const { data, error } = await supabase
-        .from('orders')
-        .insert([orderDetails]);
-
-    if (error) {
-        console.error("Error saving order:", error);
+    // 1. Gather all specific details into one clean string
+    let orderSummary = "";
+    if (selectedProduct === "T-Shirt") {
+        orderSummary = `Material: ${material} | Items: `;
+        finalItems.forEach((item, idx) => {
+            const size = document.querySelector(`input[name="size-${idx}"]:checked`).value;
+            orderSummary += `[${item.color}: ${size}] `;
+        });
     } else {
-        console.log("Order saved to database!");
+        orderSummary = `Type: ${mugType} | Handle: ${handleType}`;
     }
 
-    // 3. Existing WhatsApp logic
-    let message = `*NEW ORDER*%0A*Name:* ${name}...`; // (Your existing message code)
-    window.open(`https://wa.me/919322882765?text=${message}`, '_blank');
+    // 2. SAVE TO SUPABASE (Matches the new columns you added)
+    const { error } = await supabase
+        .from('orders')
+        .insert([{ 
+            customer_name: name, 
+            product_type: selectedProduct,
+            details: orderSummary,
+            status: 'New' // Explicitly setting status
+        }]);
+
+    if (error) {
+        alert("Database Error: " + error.message);
+        return; // Stop if database fails
+    }
+
+    // 3. Open WhatsApp as usual
+    let waMessage = `*NEW ORDER*%0A*Name:* ${name}%0A*Details:* ${orderSummary}%0A*Notes:* ${needs}`;
+    window.open(`https://wa.me/919322882765?text=${waMessage}`, '_blank');
 });
             } else {
                 message += `*Mug Type:* ${mugType}%0A`;
