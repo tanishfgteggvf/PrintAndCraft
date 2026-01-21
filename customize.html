@@ -199,17 +199,33 @@
             sizeSection.scrollIntoView({ behavior: 'smooth' });
         }
 
-        function sendOrder() {
-            const name = document.getElementById('custName').value;
-            const needs = document.getElementById('custNeeds').value;
-            if (!name) return alert("Please enter your name");
-            let message = `*NEW ORDER - PRINT CRAFT*%0A*Customer:* ${name}%0A*Product:* ${selectedProduct}%0A`;
-            if (selectedProduct === "T-Shirt") {
-                message += `*Material:* ${material}%0A*Total Items:* ${finalItems.length}%0A*DETAILS:*%0A`;
-                finalItems.forEach((item, idx) => {
-                    const size = document.querySelector(`input[name="size-${idx}"]:checked`).value;
-                    message += `${idx + 1}. ${item.color} - Size: ${size}%0A`;
-                });
+        async function sendOrder() {
+    const name = document.getElementById('custName').value;
+    const needs = document.getElementById('custNeeds').value;
+    
+    // 1. Prepare Data
+    const orderDetails = {
+        customer_name: name,
+        product_type: selectedProduct,
+        details: `Material: ${material}, Notes: ${needs}`, // Simplified for example
+        created_at: new Date()
+    };
+
+    // 2. SAVE TO BACKEND (The magic happens here)
+    const { data, error } = await supabase
+        .from('orders')
+        .insert([orderDetails]);
+
+    if (error) {
+        console.error("Error saving order:", error);
+    } else {
+        console.log("Order saved to database!");
+    }
+
+    // 3. Existing WhatsApp logic
+    let message = `*NEW ORDER*%0A*Name:* ${name}...`; // (Your existing message code)
+    window.open(`https://wa.me/919322882765?text=${message}`, '_blank');
+});
             } else {
                 message += `*Mug Type:* ${mugType}%0A`;
                 if (mugType === 'Magical') {
