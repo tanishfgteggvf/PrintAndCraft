@@ -1,29 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  // Replace the text inside the quotes with the keys you just copied
-  const supabaseUrl = 'https://ugubhstjngqhdkzainft.supabase.co';
-  const supabaseKey = 'sb_publishable_hlqWhj_yQS0E4urpFCkcpQ_T38lawcu';
-  
-  // This line creates the actual connection
-  const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Design Studio | Print Craft</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f8f8f8; color: #1a1a1a; scroll-behavior: smooth; }
         .glass-panel { background: white; border-radius: 3rem; border: 1px solid #f0f0f0; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.08); }
         .step-tag { background: #ff6b00; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 900; color: white; text-transform: uppercase; }
-        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         .active-prod { border-color: #ff6b00; background-color: #fff7ed; }
         .color-swatch { width: 24px; height: 24px; border-radius: 6px; border: 1px solid rgba(0,0,0,0.1); }
-        .cotton-alert { border-left: 4px solid #ff6b00; background: #fff7ed; padding: 12px 16px; border-radius: 12px; }
         .magical-alert { border-left: 4px solid #6366f1; background: #eef2ff; padding: 12px 16px; border-radius: 12px; }
         .wa-notice { background: #e7f5ed; border: 1px dashed #25d366; padding: 15px; border-radius: 20px; color: #075e54; }
     </style>
@@ -38,38 +28,25 @@
 
         <div class="glass-panel p-8 md:p-12">
             <h1 class="text-5xl font-black tracking-tighter mb-2 uppercase leading-none">Design <br><span class="text-[#ff6b00]">Studio.</span></h1>
-            <p class="text-gray-400 font-bold uppercase text-[10px] tracking-[0.2em] mb-12 italic text-sm">Professional Customization</p>
-
-            <div class="space-y-14">
-                
+            
+            <div class="space-y-14 mt-12">
                 <div class="space-y-6">
-                    <div class="flex items-center gap-3">
-                        <span class="step-tag">Step 01</span>
-                        <label class="font-black uppercase text-xs tracking-widest">Select Product</label>
-                    </div>
+                    <div class="flex items-center gap-3"><span class="step-tag">Step 01</span><label class="font-black uppercase text-xs tracking-widest">Select Product</label></div>
                     <div class="grid grid-cols-2 gap-4">
-                        <button onclick="setProduct('T-Shirt')" id="prodTshirt" class="active-prod p-6 border-2 rounded-[2rem] font-black uppercase text-xs transition-all">
-                            <i class="fas fa-tshirt text-2xl mb-2 block"></i>T-Shirt
-                        </button>
-                        <button onclick="setProduct('Mug')" id="prodMug" class="p-6 border-2 border-gray-100 bg-white rounded-[2rem] font-black uppercase text-xs transition-all">
-                            <i class="fas fa-mug-hot text-2xl mb-2 block"></i>Custom Mug
-                        </button>
+                        <button onclick="setProduct('T-Shirt')" id="prodTshirt" class="active-prod p-6 border-2 rounded-[2rem] font-black uppercase text-xs transition-all"><i class="fas fa-tshirt text-2xl mb-2 block"></i>T-Shirt</button>
+                        <button onclick="setProduct('Mug')" id="prodMug" class="p-6 border-2 border-gray-100 bg-white rounded-[2rem] font-black uppercase text-xs transition-all"><i class="fas fa-mug-hot text-2xl mb-2 block"></i>Custom Mug</button>
                     </div>
                 </div>
 
                 <div id="tshirtFlow" class="space-y-14">
                     <div class="space-y-8">
-                        <div class="flex items-center gap-3">
-                            <span class="step-tag">Step 02</span>
-                            <label class="font-black uppercase text-xs tracking-widest text-gray-400">Material & Colours</label>
-                        </div>
+                        <div class="flex items-center gap-3"><span class="step-tag">Step 02</span><label class="font-black uppercase text-xs tracking-widest">Material & Colours</label></div>
                         <div class="grid grid-cols-2 gap-3 bg-gray-50 p-2 rounded-2xl">
                             <button onclick="setMaterial('Cotton')" id="btnCotton" class="py-3 rounded-xl font-black uppercase text-[10px] bg-white border-2 border-[#ff6b00]">Cotton</button>
                             <button onclick="setMaterial('Jersey')" id="btnJersey" class="py-3 rounded-xl font-black uppercase text-[10px] bg-transparent border-2 border-transparent text-gray-400">Jersey</button>
                         </div>
-                        <div id="materialNotice"></div>
                         <div id="colorFields" class="grid grid-cols-1 gap-3"></div>
-                        <button id="confirmColorBtn" onclick="generateSizeStep()" class="w-full bg-black text-white py-5 rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-[#ff6b00] transition-all shadow-lg">Next: Assign Sizes <i class="fas fa-arrow-right ml-2"></i></button>
+                        <button onclick="generateSizeStep()" class="w-full bg-black text-white py-5 rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-[#ff6b00] transition-all">Next: Assign Sizes</button>
                     </div>
                     <div id="sizeSection" class="space-y-6 hidden border-t border-gray-100 pt-10">
                         <div class="flex items-center gap-3"><span class="step-tag">Step 03</span><label class="font-black uppercase text-xs tracking-widest">Sizing</label></div>
@@ -81,38 +58,31 @@
                     <div class="space-y-6">
                         <div class="flex items-center gap-3"><span class="step-tag">Step 02</span><label class="font-black uppercase text-xs tracking-widest">Mug Type</label></div>
                         <div class="grid grid-cols-2 gap-4">
-                            <button onclick="setMugType('Normal')" id="mugNormal" class="p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] active-prod transition-all">Normal White Mug</button>
-                            <button onclick="setMugType('Magical')" id="mugMagical" class="p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] border-gray-100 transition-all">Magical Mug</button>
+                            <button onclick="setMugType('Normal')" id="mugNormal" class="p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] active-prod">Normal White Mug</button>
+                            <button onclick="setMugType('Magical')" id="mugMagical" class="p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] border-gray-100">Magical Mug</button>
                         </div>
                         <div id="mugNotice"></div>
                     </div>
-
-                    <div id="mugHandleSection" class="space-y-6">
+                    <div id="mugHandleSection" class="space-y-6 hidden">
                         <div class="flex items-center gap-3"><span class="step-tag">Step 03</span><label class="font-black uppercase text-xs tracking-widest">Handle Shape</label></div>
                         <div class="grid grid-cols-2 gap-4">
-                            <button onclick="setHandle('Normal')" id="handleNormal" class="p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] active-prod transition-all">Normal Handle</button>
-                            <button onclick="setHandle('Heart')" id="handleHeart" class="p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] border-gray-100 transition-all">Heart Handle</button>
+                            <button onclick="setHandle('Normal')" id="handleNormal" class="p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] active-prod">Normal Handle</button>
+                            <button onclick="setHandle('Heart')" id="handleHeart" class="p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] border-gray-100">Heart Handle</button>
                         </div>
-                        <p id="handleInfo" class="text-[10px] text-gray-400 font-bold italic"></p>
                     </div>
                 </div>
 
-                <div id="finalSection" class="space-y-6 pt-6">
-                    <div class="flex items-center gap-3">
-                        <span class="step-tag">Final Step</span>
-                        <label class="font-black uppercase text-xs tracking-widest">Customer Details</label>
-                    </div>
+                <div class="space-y-6 pt-6 border-t border-gray-100">
+                    <div class="flex items-center gap-3"><span class="step-tag">Final</span><label class="font-black uppercase text-xs tracking-widest">Customer Info</label></div>
                     <input type="text" id="custName" placeholder="Your Full Name" class="w-full bg-gray-50 border-none rounded-2xl p-5 font-bold outline-none ring-1 ring-gray-200 focus:ring-[#ff6b00]">
-                    <textarea id="custNeeds" placeholder="Describe your design (Logo placement, specific text, etc.)" class="w-full bg-gray-50 border-none rounded-[2.5rem] p-6 h-40 font-bold outline-none ring-1 ring-gray-200 focus:ring-[#ff6b00]"></textarea>
+                    <textarea id="custNeeds" placeholder="Explain your design requirements..." class="w-full bg-gray-50 border-none rounded-[2.5rem] p-6 h-40 font-bold outline-none ring-1 ring-gray-200 focus:ring-[#ff6b00]"></textarea>
                     
                     <div class="wa-notice flex items-start gap-3">
                         <i class="fas fa-paperclip mt-1"></i>
-                        <p class="text-[11px] font-bold leading-relaxed">
-                            <span class="uppercase">Note:</span> After clicking below, WhatsApp will open. <span class="text-green-700 underline">You must then manually attach your image/logo</span> in the chat.
-                        </p>
+                        <p class="text-[11px] font-bold">NOTE: After clicking, you must manually attach your image in the WhatsApp chat.</p>
                     </div>
 
-                    <button onclick="sendOrder()" class="w-full bg-[#ff6b00] text-white py-6 rounded-[2.5rem] font-black text-lg uppercase shadow-xl shadow-orange-200 active:scale-95 transition-all">
+                    <button onclick="sendOrder()" class="w-full bg-[#ff6b00] text-white py-6 rounded-[2.5rem] font-black text-lg uppercase shadow-xl hover:scale-[1.02] transition-all">
                         Complete Order on WhatsApp <i class="fab fa-whatsapp ml-2"></i>
                     </button>
                 </div>
@@ -121,17 +91,21 @@
     </div>
 
     <script>
+        // 1. SUPABASE INITIALIZATION
+        const supabaseUrl = 'PASTE_YOUR_PROJECT_URL_HERE';
+        const supabaseKey = 'PASTE_YOUR_ANON_PUBLIC_KEY_HERE';
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+        // 2. STATE VARIABLES
         let selectedProduct = "T-Shirt";
         let material = "Cotton";
         let mugType = "Normal";
         let handleType = "Normal";
         let finalItems = [];
 
-        const colorMap = {
-            "White": "#FFFFFF", "Black": "#000000", "Orange": "#FF6B00", "Maroon": "#800000", "Brown": "#5C4033",
-            "Blue": "#0000FF", "Yellow": "#FFFF00", "Neon Yellow": "#CCFF00"
-        };
+        const colorMap = { "White": "#FFFFFF", "Black": "#000000", "Orange": "#FF6B00", "Maroon": "#800000", "Brown": "#5C4033", "Blue": "#0000FF", "Yellow": "#FFFF00", "Neon Yellow": "#CCFF00" };
 
+        // 3. UI FUNCTIONS
         function setProduct(p) {
             selectedProduct = p;
             document.getElementById('tshirtFlow').classList.toggle('hidden', p !== 'T-Shirt');
@@ -144,109 +118,81 @@
             material = m;
             document.getElementById('btnCotton').className = m === 'Cotton' ? 'py-3 rounded-xl font-black uppercase text-[10px] bg-white border-2 border-[#ff6b00]' : 'py-3 rounded-xl font-black uppercase text-[10px] bg-transparent border-2 border-transparent text-gray-400';
             document.getElementById('btnJersey').className = m === 'Jersey' ? 'py-3 rounded-xl font-black uppercase text-[10px] bg-white border-2 border-[#ff6b00]' : 'py-3 rounded-xl font-black uppercase text-[10px] bg-transparent border-2 border-transparent text-gray-400';
-            const noticeBox = document.getElementById('materialNotice');
-            noticeBox.innerHTML = m === 'Cotton' ? `<div class="cotton-alert"><p class="text-[10px] font-bold text-orange-900 leading-tight"><span class="uppercase text-[#ff6b00]">Notice:</span> Cotton only supports <span class="underline">single colour Vinyl</span> printing.</p></div>` : ``;
             renderColors();
         }
 
         function setMugType(t) {
             mugType = t;
-            const handleSection = document.getElementById('mugHandleSection');
-            const handleInfo = document.getElementById('handleInfo');
-            
-            document.getElementById('mugNormal').className = t === 'Normal' ? 'p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] active-prod transition-all' : 'p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] border-gray-100 transition-all';
-            document.getElementById('mugMagical').className = t === 'Magical' ? 'p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] active-prod transition-all' : 'p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] border-gray-100 transition-all';
-            
-            const noticeBox = document.getElementById('mugNotice');
-            
-            if (t === 'Magical') {
-                noticeBox.innerHTML = `<div class="magical-alert"><p class="text-[10px] font-bold text-indigo-900 leading-tight"><span class="uppercase text-[#6366f1]">Magical Mug:</span> Black mug that <span class="underline">reveals your image</span> when hot liquid is poured!</p></div>`;
-                handleSection.classList.remove('hidden');
-                handleInfo.innerText = "Available in Normal or Heart handle.";
-            } else {
-                noticeBox.innerHTML = ``;
-                handleSection.classList.add('hidden');
-                handleType = "Normal"; // Reset for normal mug
-                handleInfo.innerText = "";
-            }
+            document.getElementById('mugNormal').className = t === 'Normal' ? 'p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] active-prod' : 'p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] border-gray-100';
+            document.getElementById('mugMagical').className = t === 'Magical' ? 'p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] active-prod' : 'p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] border-gray-100';
+            document.getElementById('mugHandleSection').classList.toggle('hidden', t !== 'Magical');
+            document.getElementById('mugNotice').innerHTML = t === 'Magical' ? `<div class="magical-alert mt-4"><p class="text-[10px] font-bold text-indigo-900 leading-tight">Magical Mug reveals image when hot liquid is poured!</p></div>` : ``;
         }
 
         function setHandle(h) {
             handleType = h;
-            document.getElementById('handleNormal').className = h === 'Normal' ? 'p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] active-prod transition-all' : 'p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] border-gray-100 transition-all';
-            document.getElementById('handleHeart').className = h === 'Heart' ? 'p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] active-prod transition-all' : 'p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] border-gray-100 transition-all';
+            document.getElementById('handleNormal').className = h === 'Normal' ? 'p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] active-prod' : 'p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] border-gray-100';
+            document.getElementById('handleHeart').className = h === 'Heart' ? 'p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] active-prod' : 'p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] border-gray-100';
         }
 
         function renderColors() {
             const colorFields = document.getElementById('colorFields');
             const colors = material === "Cotton" ? ["White", "Black", "Orange", "Maroon", "Brown"] : ["Blue", "Yellow", "Neon Yellow", "White"];
-            colorFields.innerHTML = colors.map(c => `<div class="flex justify-between items-center bg-white p-5 rounded-[1.5rem] border border-gray-100 shadow-sm"><div class="flex items-center gap-3"><div class="color-swatch" style="background-color: ${colorMap[c]}"></div><span class="font-black uppercase text-[11px] tracking-widest">${c}</span></div><input type="number" data-color="${c}" placeholder="0" class="color-qty w-16 p-3 rounded-xl text-center font-black outline-none bg-gray-50 border-2 border-transparent focus:border-[#ff6b00] transition-all"></div>`).join('');
+            colorFields.innerHTML = colors.map(c => `<div class="flex justify-between items-center bg-white p-5 rounded-[1.5rem] border border-gray-100 shadow-sm"><div class="flex items-center gap-3"><div class="color-swatch" style="background-color: ${colorMap[c]}"></div><span class="font-black uppercase text-[11px] tracking-widest">${c}</span></div><input type="number" data-color="${c}" placeholder="0" class="color-qty w-16 p-3 rounded-xl text-center font-black outline-none bg-gray-50 border-2 border-transparent focus:border-[#ff6b00]"></div>`).join('');
         }
 
         function generateSizeStep() {
             const inputs = document.querySelectorAll('.color-qty');
-            const sizeFields = document.getElementById('sizeFields');
-            const sizeSection = document.getElementById('sizeSection');
             finalItems = [];
             inputs.forEach(input => {
                 const count = parseInt(input.value) || 0;
                 const color = input.dataset.color;
                 for (let i = 1; i <= count; i++) { finalItems.push({ color, index: i }); }
             });
-            if (finalItems.length === 0) { alert("Enter quantity for at least one color!"); return; }
-            sizeSection.classList.remove('hidden');
-            sizeFields.innerHTML = finalItems.map((item, idx) => `<div class="p-6 border-2 border-gray-100 rounded-[2rem] bg-white"><div class="flex items-center gap-2 mb-4"><div class="w-4 h-4 rounded-full border shadow-sm" style="background-color: ${colorMap[item.color]}"></div><p class="font-black text-[10px] text-gray-500 uppercase tracking-widest">${item.color} Shirt #${item.index}</p></div><div class="flex gap-2">${['S','M','L','XL','XXL'].map(s => `<label class="flex-1"><input type="radio" name="size-${idx}" value="${s}" class="peer sr-only" ${s==='M'?'checked':''}><div class="py-3 border-2 border-gray-100 rounded-xl text-center font-black text-xs peer-checked:border-[#ff6b00] peer-checked:bg-orange-50 transition-all cursor-pointer">${s}</div></label>`).join('')}</div></div>`).join('');
-            sizeSection.scrollIntoView({ behavior: 'smooth' });
+            if (finalItems.length === 0) { alert("Please enter quantity for at least one color!"); return; }
+            document.getElementById('sizeSection').classList.remove('hidden');
+            document.getElementById('sizeFields').innerHTML = finalItems.map((item, idx) => `<div class="p-6 border-2 border-gray-100 rounded-[2rem] bg-white"><p class="font-black text-[10px] text-gray-400 uppercase mb-4">${item.color} Shirt #${item.index}</p><div class="flex gap-2">${['S','M','L','XL','XXL'].map(s => `<label class="flex-1"><input type="radio" name="size-${idx}" value="${s}" class="peer sr-only" ${s==='M'?'checked':''}><div class="py-3 border-2 border-gray-100 rounded-xl text-center font-black text-xs peer-checked:border-[#ff6b00] transition-all cursor-pointer">${s}</div></label>`).join('')}</div></div>`).join('');
+            document.getElementById('sizeSection').scrollIntoView({ behavior: 'smooth' });
         }
 
+        // 4. BACKEND & WHATSAPP FUNCTION
         async function sendOrder() {
-    const name = document.getElementById('custName').value;
-    const needs = document.getElementById('custNeeds').value;
-    
-    // 1. Gather all specific details into one clean string
-    let orderSummary = "";
-    if (selectedProduct === "T-Shirt") {
-        orderSummary = `Material: ${material} | Items: `;
-        finalItems.forEach((item, idx) => {
-            const size = document.querySelector(`input[name="size-${idx}"]:checked`).value;
-            orderSummary += `[${item.color}: ${size}] `;
-        });
-    } else {
-        orderSummary = `Type: ${mugType} | Handle: ${handleType}`;
-    }
+            const name = document.getElementById('custName').value;
+            const needs = document.getElementById('custNeeds').value;
+            if (!name) return alert("Please enter your name");
 
-    // 2. SAVE TO SUPABASE (Matches the new columns you added)
-    const { error } = await supabase
-        .from('orders')
-        .insert([{ 
-            customer_name: name, 
-            product_type: selectedProduct,
-            details: orderSummary,
-            status: 'New' // Explicitly setting status
-        }]);
-
-    if (error) {
-        alert("Database Error: " + error.message);
-        return; // Stop if database fails
-    }
-
-    // 3. Open WhatsApp as usual
-    let waMessage = `*NEW ORDER*%0A*Name:* ${name}%0A*Details:* ${orderSummary}%0A*Notes:* ${needs}`;
-    window.open(`https://wa.me/919322882765?text=${waMessage}`, '_blank');
-});
+            let orderSummary = "";
+            if (selectedProduct === "T-Shirt") {
+                orderSummary = `Material: ${material} | Items: `;
+                finalItems.forEach((item, idx) => {
+                    const size = document.querySelector(`input[name="size-${idx}"]:checked`).value;
+                    orderSummary += `[${item.color}: ${size}] `;
+                });
             } else {
-                message += `*Mug Type:* ${mugType}%0A`;
-                if (mugType === 'Magical') {
-                    message += `*Handle Style:* ${handleType}%0A`;
-                } else {
-                    message += `*Handle Style:* Normal (Standard)%0A`;
-                }
+                orderSummary = `Type: ${mugType} | Handle: ${handleType}`;
             }
-            message += `%0A*Notes:* ${needs || "None"}%0A_Attaching image files now..._`;
-            window.open(`https://wa.me/919322882765?text=${message}`, '_blank');
+
+            // A. Save to Supabase Backend
+            const { error } = await supabase
+                .from('orders')
+                .insert([{ 
+                    customer_name: name, 
+                    product_type: selectedProduct, 
+                    details: orderSummary, 
+                    status: 'New' 
+                }]);
+
+            if (error) {
+                console.error("Database error:", error.message);
+                alert("Order saved failed to DB, but sending to WhatsApp...");
+            }
+
+            // B. Open WhatsApp
+            let waMessage = `*NEW ORDER - PRINT CRAFT*%0A*Customer:* ${name}%0A*Product:* ${selectedProduct}%0A*Details:* ${orderSummary}%0A*Notes:* ${needs}`;
+            window.open(`https://wa.me/919322882765?text=${waMessage}`, '_blank');
         }
 
-        window.onload = () => { renderColors(); setMugType('Normal'); setHandle('Normal'); };
+        window.onload = () => { renderColors(); setMugType('Normal'); };
     </script>
 </body>
 </html>
