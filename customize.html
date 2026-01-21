@@ -91,108 +91,109 @@
     </div>
 
     <script>
-        // 1. SUPABASE INITIALIZATION
-        const supabaseUrl = 'https://ugubhstjngqhdkzainft.supabase.co';
-        const supabaseKey = 'sb_publishable_hlqWhj_yQS0E4urpFCkcpQ_T38lawcu';
-        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+       // 1. Initialize Supabase safely
+let supabase;
+try {
+    const supabaseUrl = 'PASTE_YOUR_PROJECT_URL_HERE';
+    const supabaseKey = 'PASTE_YOUR_ANON_PUBLIC_KEY_HERE';
+    supabase = supabase.createClient(supabaseUrl, supabaseKey);
+} catch (e) {
+    console.error("Supabase failed to initialize:", e);
+}
 
-        // 2. STATE VARIABLES
-        let selectedProduct = "T-Shirt";
-        let material = "Cotton";
-        let mugType = "Normal";
-        let handleType = "Normal";
-        let finalItems = [];
+// 2. State Management
+let selectedProduct = "T-Shirt";
+let material = "Cotton";
+let mugType = "Normal";
+let handleType = "Normal";
+let finalItems = [];
 
-        const colorMap = { "White": "#FFFFFF", "Black": "#000000", "Orange": "#FF6B00", "Maroon": "#800000", "Brown": "#5C4033", "Blue": "#0000FF", "Yellow": "#FFFF00", "Neon Yellow": "#CCFF00" };
+const colorMap = { "White": "#FFFFFF", "Black": "#000000", "Orange": "#FF6B00", "Maroon": "#800000", "Brown": "#5C4033", "Blue": "#0000FF", "Yellow": "#FFFF00", "Neon Yellow": "#CCFF00" };
 
-        // 3. UI FUNCTIONS
-        function setProduct(p) {
-            selectedProduct = p;
-            document.getElementById('tshirtFlow').classList.toggle('hidden', p !== 'T-Shirt');
-            document.getElementById('mugFlow').classList.toggle('hidden', p !== 'Mug');
-            document.getElementById('prodTshirt').className = p === 'T-Shirt' ? 'active-prod p-6 border-2 rounded-[2rem] font-black uppercase text-xs transition-all' : 'p-6 border-2 border-gray-100 bg-white rounded-[2rem] font-black uppercase text-xs transition-all';
-            document.getElementById('prodMug').className = p === 'Mug' ? 'active-prod p-6 border-2 rounded-[2rem] font-black uppercase text-xs transition-all' : 'p-6 border-2 border-gray-100 bg-white rounded-[2rem] font-black uppercase text-xs transition-all';
-        }
+// 3. UI Interaction Functions (These must work for buttons to respond)
+function setProduct(p) {
+    selectedProduct = p;
+    document.getElementById('tshirtFlow').classList.toggle('hidden', p !== 'T-Shirt');
+    document.getElementById('mugFlow').classList.toggle('hidden', p !== 'Mug');
+    document.getElementById('prodTshirt').className = p === 'T-Shirt' ? 'active-prod p-6 border-2 rounded-[2rem] font-black uppercase text-xs transition-all' : 'p-6 border-2 border-gray-100 bg-white rounded-[2rem] font-black uppercase text-xs transition-all';
+    document.getElementById('prodMug').className = p === 'Mug' ? 'active-prod p-6 border-2 rounded-[2rem] font-black uppercase text-xs transition-all' : 'p-6 border-2 border-gray-100 bg-white rounded-[2rem] font-black uppercase text-xs transition-all';
+}
 
-        function setMaterial(m) {
-            material = m;
-            document.getElementById('btnCotton').className = m === 'Cotton' ? 'py-3 rounded-xl font-black uppercase text-[10px] bg-white border-2 border-[#ff6b00]' : 'py-3 rounded-xl font-black uppercase text-[10px] bg-transparent border-2 border-transparent text-gray-400';
-            document.getElementById('btnJersey').className = m === 'Jersey' ? 'py-3 rounded-xl font-black uppercase text-[10px] bg-white border-2 border-[#ff6b00]' : 'py-3 rounded-xl font-black uppercase text-[10px] bg-transparent border-2 border-transparent text-gray-400';
-            renderColors();
-        }
+function setMaterial(m) {
+    material = m;
+    document.getElementById('btnCotton').className = m === 'Cotton' ? 'py-3 rounded-xl font-black uppercase text-[10px] bg-white border-2 border-[#ff6b00]' : 'py-3 rounded-xl font-black uppercase text-[10px] bg-transparent border-2 border-transparent text-gray-400';
+    document.getElementById('btnJersey').className = m === 'Jersey' ? 'py-3 rounded-xl font-black uppercase text-[10px] bg-white border-2 border-[#ff6b00]' : 'py-3 rounded-xl font-black uppercase text-[10px] bg-transparent border-2 border-transparent text-gray-400';
+    renderColors();
+}
 
-        function setMugType(t) {
-            mugType = t;
-            document.getElementById('mugNormal').className = t === 'Normal' ? 'p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] active-prod' : 'p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] border-gray-100';
-            document.getElementById('mugMagical').className = t === 'Magical' ? 'p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] active-prod' : 'p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] border-gray-100';
-            document.getElementById('mugHandleSection').classList.toggle('hidden', t !== 'Magical');
-            document.getElementById('mugNotice').innerHTML = t === 'Magical' ? `<div class="magical-alert mt-4"><p class="text-[10px] font-bold text-indigo-900 leading-tight">Magical Mug reveals image when hot liquid is poured!</p></div>` : ``;
-        }
+function setMugType(t) {
+    mugType = t;
+    document.getElementById('mugNormal').className = t === 'Normal' ? 'p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] active-prod' : 'p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] border-gray-100';
+    document.getElementById('mugMagical').className = t === 'Magical' ? 'p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] active-prod' : 'p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] border-gray-100';
+    document.getElementById('mugHandleSection').classList.toggle('hidden', t !== 'Magical');
+}
 
-        function setHandle(h) {
-            handleType = h;
-            document.getElementById('handleNormal').className = h === 'Normal' ? 'p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] active-prod' : 'p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] border-gray-100';
-            document.getElementById('handleHeart').className = h === 'Heart' ? 'p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] active-prod' : 'p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] border-gray-100';
-        }
+function setHandle(h) {
+    handleType = h;
+    document.getElementById('handleNormal').className = h === 'Normal' ? 'p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] active-prod' : 'p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] border-gray-100';
+    document.getElementById('handleHeart').className = h === 'Heart' ? 'p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] active-prod' : 'p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] border-gray-100';
+}
 
-        function renderColors() {
-            const colorFields = document.getElementById('colorFields');
-            const colors = material === "Cotton" ? ["White", "Black", "Orange", "Maroon", "Brown"] : ["Blue", "Yellow", "Neon Yellow", "White"];
-            colorFields.innerHTML = colors.map(c => `<div class="flex justify-between items-center bg-white p-5 rounded-[1.5rem] border border-gray-100 shadow-sm"><div class="flex items-center gap-3"><div class="color-swatch" style="background-color: ${colorMap[c]}"></div><span class="font-black uppercase text-[11px] tracking-widest">${c}</span></div><input type="number" data-color="${c}" placeholder="0" class="color-qty w-16 p-3 rounded-xl text-center font-black outline-none bg-gray-50 border-2 border-transparent focus:border-[#ff6b00]"></div>`).join('');
-        }
+function renderColors() {
+    const colorFields = document.getElementById('colorFields');
+    if(!colorFields) return;
+    const colors = material === "Cotton" ? ["White", "Black", "Orange", "Maroon", "Brown"] : ["Blue", "Yellow", "Neon Yellow", "White"];
+    colorFields.innerHTML = colors.map(c => `<div class="flex justify-between items-center bg-white p-5 rounded-[1.5rem] border border-gray-100 shadow-sm"><div class="flex items-center gap-3"><div class="color-swatch" style="background-color: ${colorMap[c]}"></div><span class="font-black uppercase text-[11px] tracking-widest">${c}</span></div><input type="number" data-color="${c}" placeholder="0" class="color-qty w-16 p-3 rounded-xl text-center font-black outline-none bg-gray-50 border-2 border-transparent focus:border-[#ff6b00]"></div>`).join('');
+}
 
-        function generateSizeStep() {
-            const inputs = document.querySelectorAll('.color-qty');
-            finalItems = [];
-            inputs.forEach(input => {
-                const count = parseInt(input.value) || 0;
-                const color = input.dataset.color;
-                for (let i = 1; i <= count; i++) { finalItems.push({ color, index: i }); }
-            });
-            if (finalItems.length === 0) { alert("Please enter quantity for at least one color!"); return; }
-            document.getElementById('sizeSection').classList.remove('hidden');
-            document.getElementById('sizeFields').innerHTML = finalItems.map((item, idx) => `<div class="p-6 border-2 border-gray-100 rounded-[2rem] bg-white"><p class="font-black text-[10px] text-gray-400 uppercase mb-4">${item.color} Shirt #${item.index}</p><div class="flex gap-2">${['S','M','L','XL','XXL'].map(s => `<label class="flex-1"><input type="radio" name="size-${idx}" value="${s}" class="peer sr-only" ${s==='M'?'checked':''}><div class="py-3 border-2 border-gray-100 rounded-xl text-center font-black text-xs peer-checked:border-[#ff6b00] transition-all cursor-pointer">${s}</div></label>`).join('')}</div></div>`).join('');
-            document.getElementById('sizeSection').scrollIntoView({ behavior: 'smooth' });
-        }
+function generateSizeStep() {
+    const inputs = document.querySelectorAll('.color-qty');
+    finalItems = [];
+    inputs.forEach(input => {
+        const count = parseInt(input.value) || 0;
+        const color = input.dataset.color;
+        for (let i = 1; i <= count; i++) { finalItems.push({ color, index: i }); }
+    });
+    if (finalItems.length === 0) { alert("Please enter quantity for at least one color!"); return; }
+    document.getElementById('sizeSection').classList.remove('hidden');
+    document.getElementById('sizeFields').innerHTML = finalItems.map((item, idx) => `<div class="p-6 border-2 border-gray-100 rounded-[2rem] bg-white"><p class="font-black text-[10px] text-gray-400 uppercase mb-4">${item.color} Shirt #${item.index}</p><div class="flex gap-2">${['S','M','L','XL','XXL'].map(s => `<label class="flex-1"><input type="radio" name="size-${idx}" value="${s}" class="peer sr-only" ${s==='M'?'checked':''}><div class="py-3 border-2 border-gray-100 rounded-xl text-center font-black text-xs peer-checked:border-[#ff6b00] transition-all cursor-pointer">${s}</div></label>`).join('')}</div></div>`).join('');
+}
 
-        // 4. BACKEND & WHATSAPP FUNCTION
-        async function sendOrder() {
-            const name = document.getElementById('custName').value;
-            const needs = document.getElementById('custNeeds').value;
-            if (!name) return alert("Please enter your name");
+// 4. Final Send Function
+async function sendOrder() {
+    const name = document.getElementById('custName').value;
+    const needs = document.getElementById('custNeeds').value;
+    if (!name) return alert("Please enter your name");
 
-            let orderSummary = "";
-            if (selectedProduct === "T-Shirt") {
-                orderSummary = `Material: ${material} | Items: `;
-                finalItems.forEach((item, idx) => {
-                    const size = document.querySelector(`input[name="size-${idx}"]:checked`).value;
-                    orderSummary += `[${item.color}: ${size}] `;
-                });
-            } else {
-                orderSummary = `Type: ${mugType} | Handle: ${handleType}`;
-            }
+    let orderSummary = "";
+    if (selectedProduct === "T-Shirt") {
+        orderSummary = `Material: ${material} | Items: `;
+        finalItems.forEach((item, idx) => {
+            const sizeInput = document.querySelector(`input[name="size-${idx}"]:checked`);
+            const size = sizeInput ? sizeInput.value : "M";
+            orderSummary += `[${item.color}: ${size}] `;
+        });
+    } else {
+        orderSummary = `Type: ${mugType} | Handle: ${handleType}`;
+    }
 
-            // A. Save to Supabase Backend
-            const { error } = await supabase
-                .from('orders')
-                .insert([{ 
-                    customer_name: name, 
-                    product_type: selectedProduct, 
-                    details: orderSummary, 
-                    status: 'New' 
-                }]);
+    // Try to save to backend but don't block WhatsApp if it fails
+    if (supabase) {
+        try {
+            await supabase.from('orders').insert([{ 
+                customer_name: name, 
+                product_type: selectedProduct, 
+                details: orderSummary, 
+                status: 'New' 
+            }]);
+        } catch (err) { console.error("DB Error:", err); }
+    }
 
-            if (error) {
-                console.error("Database error:", error.message);
-                alert("Order saved failed to DB, but sending to WhatsApp...");
-            }
+    let waMessage = `*NEW ORDER - PRINT CRAFT*%0A*Customer:* ${name}%0A*Product:* ${selectedProduct}%0A*Details:* ${orderSummary}%0A*Notes:* ${needs}`;
+    window.open(`https://wa.me/919322882765?text=${waMessage}`, '_blank');
+}
 
-            // B. Open WhatsApp
-            let waMessage = `*NEW ORDER - PRINT CRAFT*%0A*Customer:* ${name}%0A*Product:* ${selectedProduct}%0A*Details:* ${orderSummary}%0A*Notes:* ${needs}`;
-            window.open(`https://wa.me/919322882765?text=${waMessage}`, '_blank');
-        }
-
-        window.onload = () => { renderColors(); setMugType('Normal'); };
+window.onload = () => { renderColors(); };
     </script>
 </body>
 </html>
