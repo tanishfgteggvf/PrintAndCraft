@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Design Studio | Print Craft</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
@@ -34,7 +33,7 @@
                     <div class="flex items-center gap-3"><span class="step-tag">Step 01</span><label class="font-black uppercase text-xs tracking-widest">Select Product</label></div>
                     <div class="grid grid-cols-2 gap-4">
                         <button onclick="setProduct('T-Shirt')" id="prodTshirt" class="active-prod p-6 border-2 rounded-[2rem] font-black uppercase text-xs transition-all"><i class="fas fa-tshirt text-2xl mb-2 block"></i>T-Shirt</button>
-                        <button onclick="setProduct('Mug')" id="prodMug" class="p-6 border-2 border-gray-100 bg-white rounded-[2rem] font-black uppercase text-xs transition-all"><i class="fas fa-mug-hot text-2xl mb-2 block"></i>Custom Mug</button>
+                        <button onclick="setMugFlow()" id="prodMug" class="p-6 border-2 border-gray-100 bg-white rounded-[2rem] font-black uppercase text-xs transition-all"><i class="fas fa-mug-hot text-2xl mb-2 block"></i>Custom Mug</button>
                     </div>
                 </div>
 
@@ -91,12 +90,6 @@
     </div>
 
     <script>
-        // 1. SUPABASE INITIALIZATION
-        const supabaseUrl = 'https://ugubhstjngqhdkzainft.supabase.co';
-        const supabaseKey = 'sb_publishable_hlqWhj_yQS0E4urpFCkcpQ_T38lawcu';
-        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-
-        // 2. STATE VARIABLES
         let selectedProduct = "T-Shirt";
         let material = "Cotton";
         let mugType = "Normal";
@@ -105,7 +98,6 @@
 
         const colorMap = { "White": "#FFFFFF", "Black": "#000000", "Orange": "#FF6B00", "Maroon": "#800000", "Brown": "#5C4033", "Blue": "#0000FF", "Yellow": "#FFFF00", "Neon Yellow": "#CCFF00" };
 
-        // 3. UI FUNCTIONS
         function setProduct(p) {
             selectedProduct = p;
             document.getElementById('tshirtFlow').classList.toggle('hidden', p !== 'T-Shirt');
@@ -113,6 +105,8 @@
             document.getElementById('prodTshirt').className = p === 'T-Shirt' ? 'active-prod p-6 border-2 rounded-[2rem] font-black uppercase text-xs transition-all' : 'p-6 border-2 border-gray-100 bg-white rounded-[2rem] font-black uppercase text-xs transition-all';
             document.getElementById('prodMug').className = p === 'Mug' ? 'active-prod p-6 border-2 rounded-[2rem] font-black uppercase text-xs transition-all' : 'p-6 border-2 border-gray-100 bg-white rounded-[2rem] font-black uppercase text-xs transition-all';
         }
+
+        function setMugFlow() { setProduct('Mug'); setMugType('Normal'); }
 
         function setMaterial(m) {
             material = m;
@@ -155,8 +149,7 @@
             document.getElementById('sizeSection').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // 4. BACKEND & WHATSAPP FUNCTION
-        async function sendOrder() {
+        function sendOrder() {
             const name = document.getElementById('custName').value;
             const needs = document.getElementById('custNeeds').value;
             if (!name) return alert("Please enter your name");
@@ -172,22 +165,6 @@
                 orderSummary = `Type: ${mugType} | Handle: ${handleType}`;
             }
 
-            // A. Save to Supabase Backend
-            const { error } = await supabase
-                .from('orders')
-                .insert([{ 
-                    customer_name: name, 
-                    product_type: selectedProduct, 
-                    details: orderSummary, 
-                    status: 'New' 
-                }]);
-
-            if (error) {
-                console.error("Database error:", error.message);
-                alert("Order saved failed to DB, but sending to WhatsApp...");
-            }
-
-            // B. Open WhatsApp
             let waMessage = `*NEW ORDER - PRINT CRAFT*%0A*Customer:* ${name}%0A*Product:* ${selectedProduct}%0A*Details:* ${orderSummary}%0A*Notes:* ${needs}`;
             window.open(`https://wa.me/919322882765?text=${waMessage}`, '_blank');
         }
