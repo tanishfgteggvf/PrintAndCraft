@@ -12,177 +12,276 @@
         .glass-panel { background: white; border-radius: 3rem; border: 1px solid #f0f0f0; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.08); }
         .step-tag { background: #ff6b00; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 900; color: white; text-transform: uppercase; }
         .active-prod { border-color: #ff6b00 !important; background-color: #fff7ed !important; }
+        .color-swatch { width: 24px; height: 24px; border-radius: 6px; border: 1px solid rgba(0,0,0,0.1); }
         
-        /* BIG DISCLAIMER BOXES */
-        .disclaimer-box { 
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-        }
-        .active-warning { 
-            background-color: #ff6b00 !important; 
-            color: white !important; 
-            transform: scale(1.05);
-            box-shadow: 0 10px 15px -3px rgba(255, 107, 0, 0.3);
-        }
-        .inactive-warning { 
-            background-color: #f3f4f6 !important; 
-            color: #9ca3af !important; 
-            opacity: 0.5; 
-        }
+        /* High-Visibility Disclaimers */
+        .disclaimer-active { background-color: #ea580c; color: white; transform: scale(1.05); }
+        .disclaimer-inactive { background-color: #e5e7eb; color: #9ca3af; opacity: 0.5; transform: scale(1); }
 
-        /* DRAG & DROP AREA */
+        /* Drag & Drop Styles */
         #drop-area {
             border: 3px dashed #e5e7eb;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
         }
         #drop-area.highlight {
             border-color: #ff6b00;
             background-color: #fff7ed;
         }
-        .preview-thumb {
-            width: 80px; height: 80px; object-fit: cover; border-radius: 12px; border: 2px solid #ff6b00;
+        .preview-img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 2px solid #ff6b00;
         }
     </style>
 </head>
-<body class="min-h-screen py-10 px-4">
+<body class="min-h-screen py-10 px-4 md:px-0">
 
-    <div class="max-w-2xl mx-auto">
+    <div class="max-w-2xl mx-auto" id="mainContainer">
+        <div class="flex justify-between items-center mb-8 px-4">
+            <a href="index.html" class="font-black uppercase text-[10px] tracking-widest text-gray-400 hover:text-black"><i class="fas fa-arrow-left mr-2"></i> Exit</a>
+            <div class="font-black text-xl uppercase tracking-tighter"><span class="text-[#ff6b00]">PRINT</span>CRAFT</div>
+        </div>
+
         <div class="glass-panel p-8 md:p-12" id="studioPanel">
-            <h1 class="text-5xl font-black tracking-tighter mb-12 uppercase leading-none">Design <br><span class="text-[#ff6b00]">Studio.</span></h1>
+            <h1 class="text-5xl font-black tracking-tighter mb-2 uppercase leading-none">Design <br><span class="text-[#ff6b00]">Studio.</span></h1>
             
-            <div class="space-y-14">
+            <div class="space-y-14 mt-12">
                 <div class="space-y-6">
-                    <div class="flex items-center gap-3"><span class="step-tag">Step 02</span><label class="font-black uppercase text-xs tracking-widest">Material & Print Method</label></div>
-                    
+                    <div class="flex items-center gap-3"><span class="step-tag">Step 01</span><label class="font-black uppercase text-xs tracking-widest">Select Product</label></div>
                     <div class="grid grid-cols-2 gap-4">
-                        <div class="space-y-3">
-                            <button onclick="setMaterial('Cotton')" id="btnCotton" class="w-full py-5 rounded-3xl font-black uppercase text-xs border-2 border-[#ff6b00] bg-white">Cotton</button>
-                            <div id="warnCotton" class="disclaimer-box active-warning p-4 rounded-2xl text-center">
-                                <i class="fas fa-exclamation-triangle block text-xl mb-1"></i>
-                                <span class="font-black text-[12px] block leading-tight">DTF MONO<br>COLOUR ONLY</span>
+                        <button onclick="setProduct('T-Shirt')" id="prodTshirt" class="active-prod p-6 border-2 border-gray-100 rounded-[2rem] font-black uppercase text-xs transition-all"><i class="fas fa-tshirt text-2xl mb-2 block"></i>T-Shirt</button>
+                        <button onclick="setMugFlow()" id="prodMug" class="p-6 border-2 border-gray-100 bg-white rounded-[2rem] font-black uppercase text-xs transition-all"><i class="fas fa-mug-hot text-2xl mb-2 block"></i>Custom Mug</button>
+                    </div>
+                </div>
+
+                <div id="tshirtFlow" class="space-y-14">
+                    <div class="space-y-8">
+                        <div class="flex items-center gap-3"><span class="step-tag">Step 02</span><label class="font-black uppercase text-xs tracking-widest">Material & Colours</label></div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="space-y-3">
+                                <button onclick="setMaterial('Cotton')" id="btnCotton" class="w-full py-5 rounded-3xl font-black uppercase text-xs bg-white border-2 border-[#ff6b00]">Cotton</button>
+                                <div id="cottonDisclaimer" class="disclaimer-active p-4 rounded-2xl text-center shadow-md transition-all">
+                                    <i class="fas fa-exclamation-triangle block mb-1"></i>
+                                    <span class="font-black text-[10px] uppercase block">DTF MONO<br>COLOUR ONLY</span>
+                                </div>
+                            </div>
+                            <div class="space-y-3">
+                                <button onclick="setMaterial('Jersey')" id="btnJersey" class="w-full py-5 rounded-3xl font-black uppercase text-xs bg-transparent border-2 border-gray-100 text-gray-400">Jersey</button>
+                                <div id="jerseyDisclaimer" class="disclaimer-inactive p-4 rounded-2xl text-center transition-all">
+                                    <i class="fas fa-camera block mb-1"></i>
+                                    <span class="font-black text-[10px] uppercase block">PHOTO PRINTS<br>ONLY</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="space-y-3">
-                            <button onclick="setMaterial('Jersey')" id="btnJersey" class="w-full py-5 rounded-3xl font-black uppercase text-xs border-2 border-gray-100 text-gray-400">Jersey</button>
-                            <div id="warnJersey" class="disclaimer-box inactive-warning p-4 rounded-2xl text-center">
-                                <i class="fas fa-camera block text-xl mb-1"></i>
-                                <span class="font-black text-[12px] block leading-tight">PHOTO PRINTS<br>ONLY</span>
-                            </div>
+
+                        <div id="colorFields" class="grid grid-cols-1 gap-3"></div>
+                        <button onclick="generateSizeStep()" class="w-full bg-black text-white py-6 rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-[#ff6b00] transition-all">Next: Assign Sizes</button>
+                    </div>
+
+                    <div id="sizeSection" class="space-y-6 hidden border-t border-gray-100 pt-10">
+                        <div class="flex items-center gap-3"><span class="step-tag">Step 03</span><label class="font-black uppercase text-xs tracking-widest">Sizing</label></div>
+                        <div id="sizeFields" class="space-y-4"></div>
+                    </div>
+                </div>
+
+                <div id="mugFlow" class="space-y-10 hidden">
+                    <div class="space-y-6">
+                        <div class="flex items-center gap-3"><span class="step-tag">Step 02</span><label class="font-black uppercase text-xs tracking-widest">Mug Details</label></div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <button onclick="setMugType('Normal')" id="mugNormal" class="p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] active-prod">Normal White Mug</button>
+                            <button onclick="setMugType('Magical')" id="mugMagical" class="p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] border-gray-100">Magical Mug</button>
                         </div>
                     </div>
                 </div>
 
                 <div class="space-y-6 pt-6 border-t border-gray-100">
-                    <div class="flex items-center gap-3"><span class="step-tag">Upload</span><label class="font-black uppercase text-xs tracking-widest">Drag Designs Here</label></div>
+                    <div class="flex items-center gap-3"><span class="step-tag">Final</span><label class="font-black uppercase text-xs tracking-widest">Order Info</label></div>
                     
-                    <div id="drop-area" class="rounded-[2.5rem] p-12 text-center bg-gray-50 cursor-pointer" onclick="document.getElementById('fileElem').click()">
-                        <input type="file" id="fileElem" multiple accept="image/*" class="hidden" onchange="handleFiles(this.files)">
-                        <i class="fas fa-images text-5xl text-gray-300 mb-4"></i>
-                        <p class="font-black uppercase text-sm tracking-widest">Drop Multiple Photos Here</p>
-                        <p class="text-[10px] text-gray-400 font-bold mt-2 uppercase">Or click to select from your device</p>
-                        
-                        <div id="gallery" class="flex flex-wrap gap-3 justify-center mt-6"></div>
-                    </div>
-                </div>
-
-                <div class="space-y-4 pt-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <input type="text" id="custName" placeholder="Full Name *" class="w-full bg-gray-50 rounded-2xl p-5 font-bold outline-none ring-1 ring-gray-200 focus:ring-[#ff6b00]">
-                        <input type="tel" id="custPhone" placeholder="Mobile Number *" class="w-full bg-gray-50 rounded-2xl p-5 font-bold outline-none ring-1 ring-gray-200 focus:ring-[#ff6b00]">
+                        <input type="text" id="custName" placeholder="Full Name *" required class="w-full bg-gray-50 border-none rounded-2xl p-5 font-bold outline-none ring-1 ring-gray-200 focus:ring-[#ff6b00]">
+                        <input type="tel" id="custPhone" placeholder="Mobile Number *" required class="w-full bg-gray-50 border-none rounded-2xl p-5 font-bold outline-none ring-1 ring-gray-200 focus:ring-[#ff6b00]">
                     </div>
-                    <button onclick="sendOrder()" id="submitBtn" class="w-full bg-[#ff6b00] text-white py-6 rounded-[2.5rem] font-black text-lg uppercase shadow-xl hover:bg-black transition-all">Place Order</button>
+                    
+                    <div class="space-y-3">
+                        <label class="font-black uppercase text-[10px] text-gray-400 ml-2">Upload Designs</label>
+                        <div id="drop-area" class="rounded-[2rem] p-10 text-center cursor-pointer bg-gray-50">
+                            <input type="file" id="designFile" accept="image/*" multiple hidden onchange="handleFiles(this.files)">
+                            <div onclick="document.getElementById('designFile').click()">
+                                <i class="fas fa-cloud-upload-alt text-4xl text-gray-300 mb-4"></i>
+                                <p class="font-black uppercase text-xs tracking-widest">Drag & Drop Photos</p>
+                                <p class="text-[10px] text-gray-400 font-bold mt-1 uppercase">Or click to browse</p>
+                            </div>
+                            <div id="preview-container" class="flex flex-wrap gap-2 mt-6 justify-center"></div>
+                        </div>
+                    </div>
+
+                    <textarea id="custNeeds" placeholder="Any special requirements?" class="w-full bg-gray-50 border-none rounded-[2.5rem] p-6 h-40 font-bold outline-none ring-1 ring-gray-200 focus:ring-[#ff6b00]"></textarea>
+
+                    <button onclick="sendOrder()" id="submitBtn" class="w-full bg-[#ff6b00] text-white py-6 rounded-[2.5rem] font-black text-lg uppercase shadow-xl hover:bg-black transition-all">
+                        Place Order
+                    </button>
+                    <p id="uploadStatus" class="text-center text-[10px] font-bold text-gray-400 uppercase mt-4"></p>
                 </div>
             </div>
         </div>
 
-        <div id="successPanel" class="hidden glass-panel p-20 text-center">
-            <i class="fas fa-check-circle text-6xl text-green-500 mb-6"></i>
-            <h2 class="text-3xl font-black uppercase">Order Received!</h2>
-            <p class="text-gray-500 font-bold mt-4">We will contact you shortly.</p>
+        <div id="successPanel" class="hidden glass-panel p-12 text-center">
+            <div class="w-24 h-24 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fas fa-check text-4xl"></i>
+            </div>
+            <h2 class="text-3xl font-black uppercase mb-2 text-[#ff6b00]">Order Sent!</h2>
+            <p class="text-gray-500 font-bold mb-8 leading-relaxed">Your order has been recorded successfully. <br>Our team will reach out shortly.</p>
+            <button onclick="location.reload()" class="bg-black text-white px-10 py-5 rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-[#ff6b00]">Back to Studio</button>
         </div>
     </div>
 
     <script>
-        let selectedMaterial = 'Cotton';
-        let filesToUpload = [];
+        let selectedProduct = "T-Shirt";
+        let material = "Cotton";
+        let mugType = "Normal";
+        let finalItems = [];
+        let droppedFiles = [];
 
-        // 1. BIG WARNING TOGGLE
-        function setMaterial(m) {
-            selectedMaterial = m;
-            const isCotton = m === 'Cotton';
-            
-            // Buttons
-            document.getElementById('btnCotton').className = isCotton ? 'w-full py-5 rounded-3xl font-black uppercase text-xs border-2 border-[#ff6b00] bg-white' : 'w-full py-5 rounded-3xl font-black uppercase text-xs border-2 border-gray-100 text-gray-400';
-            document.getElementById('btnJersey').className = !isCotton ? 'w-full py-5 rounded-3xl font-black uppercase text-xs border-2 border-[#ff6b00] bg-white' : 'w-full py-5 rounded-3xl font-black uppercase text-xs border-2 border-gray-100 text-gray-400';
+        // --- Drag & Drop Logic ---
+        const dropArea = document.getElementById('drop-area');
 
-            // Warning Boxes
-            document.getElementById('warnCotton').className = isCotton ? 'disclaimer-box active-warning p-4 rounded-2xl text-center' : 'disclaimer-box inactive-warning p-4 rounded-2xl text-center';
-            document.getElementById('warnJersey').className = !isCotton ? 'disclaimer-box active-warning p-4 rounded-2xl text-center' : 'disclaimer-box inactive-warning p-4 rounded-2xl text-center';
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) { e.preventDefault(); e.stopPropagation(); }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropArea.addEventListener(eventName, () => dropArea.classList.add('highlight'), false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, () => dropArea.classList.remove('highlight'), false);
+        });
+
+        dropArea.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            let dt = e.dataTransfer;
+            let files = dt.files;
+            handleFiles(files);
         }
 
-        // 2. DRAG & DROP LOGIC
-        let dropArea = document.getElementById('drop-area');
-
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(e => {
-            dropArea.addEventListener(e, (ev) => { ev.preventDefault(); ev.stopPropagation(); }, false);
-        });
-
-        ['dragenter', 'dragover'].forEach(e => {
-            dropArea.addEventListener(e, () => dropArea.classList.add('highlight'), false);
-        });
-
-        ['dragleave', 'drop'].forEach(e => {
-            dropArea.addEventListener(e, () => dropArea.classList.remove('highlight'), false);
-        });
-
-        dropArea.addEventListener('drop', (e) => handleFiles(e.dataTransfer.files), false);
-
         function handleFiles(files) {
-            filesToUpload = [...files];
-            let gallery = document.getElementById('gallery');
-            gallery.innerHTML = '';
-            filesToUpload.forEach(file => {
-                let reader = new FileReader();
+            droppedFiles = [...files]; // Store the files
+            const previewContainer = document.getElementById('preview-container');
+            previewContainer.innerHTML = '';
+            
+            droppedFiles.forEach(file => {
+                const reader = new FileReader();
                 reader.readAsDataURL(file);
                 reader.onloadend = () => {
-                    let img = document.createElement('img');
+                    const img = document.createElement('img');
                     img.src = reader.result;
-                    img.className = 'preview-thumb';
-                    gallery.appendChild(img);
-                }
+                    img.className = 'preview-img';
+                    previewContainer.appendChild(img);
+                };
             });
         }
 
-        // 3. SEND DATA
+        // --- Studio Logic ---
+        function setProduct(p) {
+            selectedProduct = p;
+            document.getElementById('tshirtFlow').classList.toggle('hidden', p !== 'T-Shirt');
+            document.getElementById('mugFlow').classList.toggle('hidden', p !== 'Mug');
+            document.getElementById('prodTshirt').className = p === 'T-Shirt' ? 'active-prod p-6 border-2 border-gray-100 rounded-[2rem] font-black uppercase text-xs' : 'p-6 border-2 border-gray-100 bg-white rounded-[2rem] font-black uppercase text-xs';
+            document.getElementById('prodMug').className = p === 'Mug' ? 'active-prod p-6 border-2 border-gray-100 rounded-[2rem] font-black uppercase text-xs' : 'p-6 border-2 border-gray-100 bg-white rounded-[2rem] font-black uppercase text-xs';
+        }
+
+        function setMugFlow() { setProduct('Mug'); }
+
+        function setMaterial(m) {
+            material = m;
+            const isCotton = m === 'Cotton';
+            document.getElementById('btnCotton').className = isCotton ? 'w-full py-5 rounded-3xl font-black uppercase text-xs bg-white border-2 border-[#ff6b00]' : 'w-full py-5 rounded-3xl font-black uppercase text-xs bg-transparent border-2 border-gray-100 text-gray-400';
+            document.getElementById('btnJersey').className = !isCotton ? 'w-full py-5 rounded-3xl font-black uppercase text-xs bg-white border-2 border-[#ff6b00]' : 'w-full py-5 rounded-3xl font-black uppercase text-xs bg-transparent border-2 border-gray-100 text-gray-400';
+            
+            document.getElementById('cottonDisclaimer').className = isCotton ? 'disclaimer-active p-4 rounded-2xl text-center shadow-md transition-all' : 'disclaimer-inactive p-4 rounded-2xl text-center transition-all';
+            document.getElementById('jerseyDisclaimer').className = !isCotton ? 'disclaimer-active p-4 rounded-2xl text-center shadow-md transition-all' : 'disclaimer-inactive p-4 rounded-2xl text-center transition-all';
+            renderColors();
+        }
+
+        const colorMap = { "White": "#FFFFFF", "Black": "#000000", "Orange": "#FF6B00", "Maroon": "#800000", "Brown": "#5C4033", "Blue": "#0000FF", "Yellow": "#FFFF00", "Neon Yellow": "#CCFF00" };
+
+        function renderColors() {
+            const colorFields = document.getElementById('colorFields');
+            const colors = material === "Cotton" ? ["White", "Black", "Orange", "Maroon", "Brown"] : ["Blue", "Yellow", "Neon Yellow", "White"];
+            colorFields.innerHTML = colors.map(c => `<div class="flex justify-between items-center bg-white p-5 rounded-[1.5rem] border border-gray-100 shadow-sm"><div class="flex items-center gap-3"><div class="color-swatch" style="background-color: ${colorMap[c]}"></div><span class="font-black uppercase text-[11px] tracking-widest">${c}</span></div><input type="number" data-color="${c}" placeholder="0" class="color-qty w-16 p-3 rounded-xl text-center font-black outline-none bg-gray-50 border-2 border-transparent focus:border-[#ff6b00]"></div>`).join('');
+        }
+
+        function generateSizeStep() {
+            const inputs = document.querySelectorAll('.color-qty');
+            finalItems = [];
+            inputs.forEach(input => {
+                const count = parseInt(input.value) || 0;
+                const color = input.dataset.color;
+                for (let i = 1; i <= count; i++) { finalItems.push({ color, index: i }); }
+            });
+            if (finalItems.length === 0) { alert("Please enter quantity first!"); return; }
+            document.getElementById('sizeSection').classList.remove('hidden');
+            document.getElementById('sizeFields').innerHTML = finalItems.map((item, idx) => `<div class="p-6 border-2 border-gray-100 rounded-[2rem] bg-white"><p class="font-black text-[10px] text-gray-400 uppercase mb-4">${item.color} Shirt #${item.index}</p><div class="flex gap-2">${['S','M','L','XL','XXL'].map(s => `<label class="flex-1"><input type="radio" name="size-${idx}" value="${s}" class="peer sr-only" ${s==='M'?'checked':''}><div class="py-3 border-2 border-gray-100 rounded-xl text-center font-black text-xs peer-checked:border-[#ff6b00] transition-all cursor-pointer">${s}</div></label>`).join('')}</div></div>`).join('');
+            document.getElementById('sizeSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
         async function sendOrder() {
             const name = document.getElementById('custName').value;
             const phone = document.getElementById('custPhone').value;
-            if(!name || !phone || filesToUpload.length === 0) return alert("Fill all fields and add photos!");
-
             const btn = document.getElementById('submitBtn');
-            btn.disabled = true; btn.innerText = "UPLOADING...";
+            const status = document.getElementById('uploadStatus');
 
-            let imagesData = [];
-            for (let file of filesToUpload) {
-                const base64 = await new Promise(r => {
+            if (!name || !phone) return alert("Please enter Name and Phone");
+            if (droppedFiles.length === 0) return alert("Please drag or select at least one design photo");
+
+            btn.disabled = true;
+            btn.innerText = "SENDING...";
+            status.innerText = "⏳ Uploading " + droppedFiles.length + " files...";
+
+            let imageArray = [];
+            for (let file of droppedFiles) {
+                const base64 = await new Promise(resolve => {
                     const reader = new FileReader();
-                    reader.onload = () => r(reader.result.split(',')[1]);
+                    reader.onload = () => resolve(reader.result.split(',')[1]);
                     reader.readAsDataURL(file);
                 });
-                imagesData.push({ name: file.name, data: base64 });
+                imageArray.push({ name: file.name, data: base64 });
             }
 
-            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwlbk-H2Drqq4fDQHMcDo5c6f0C6IZpkKDJw19SptTcHSNOq_x8i6Z1HNQL-Hs8-Tqx/exec";
+            let orderSummary = (selectedProduct === "T-Shirt") 
+                ? `Type: ${material} | Items: ` + finalItems.map((it, idx) => `[${it.color}: ${document.querySelector('input[name="size-'+idx+'"]:checked').value}]`).join(' ')
+                : `Mug: ${mugType} | Qty: ${document.getElementById('mugQty') ? document.getElementById('mugQty').value : 1}`;
+
+            const GOOGLE_URL = "https://script.google.com/macros/s/AKfycbwlbk-H2Drqq4fDQHMcDo5c6f0C6IZpkKDJw19SptTcHSNOq_x8i6Z1HNQL-Hs8-Tqx/exec";
             
-            fetch(SCRIPT_URL, {
-                method: "POST",
-                mode: "no-cors",
-                body: JSON.stringify({ name, phone, product: "T-Shirt", details: selectedMaterial, images: imagesData })
-            }).then(() => {
+            try {
+                await fetch(GOOGLE_URL, {
+                    method: "POST",
+                    mode: "no-cors",
+                    body: JSON.stringify({
+                        name: name,
+                        phone: phone,
+                        product: selectedProduct,
+                        details: orderSummary,
+                        notes: document.getElementById('custNeeds').value,
+                        images: imageArray
+                    })
+                });
                 document.getElementById('studioPanel').classList.add('hidden');
                 document.getElementById('successPanel').classList.remove('hidden');
-            });
+                window.scrollTo(0,0);
+            } catch (e) {
+                alert("Submission failed. Try again.");
+                btn.disabled = false;
+            }
         }
+        window.onload = () => { renderColors(); };
     </script>
 </body>
 </html>
