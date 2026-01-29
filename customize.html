@@ -17,6 +17,23 @@
         /* High-Visibility Disclaimers */
         .disclaimer-active { background-color: #ea580c; color: white; transform: scale(1.05); }
         .disclaimer-inactive { background-color: #e5e7eb; color: #9ca3af; opacity: 0.5; transform: scale(1); }
+
+        /* Drag & Drop Styles */
+        #drop-area {
+            border: 3px dashed #e5e7eb;
+            transition: all 0.3s ease;
+        }
+        #drop-area.highlight {
+            border-color: #ff6b00;
+            background-color: #fff7ed;
+        }
+        .preview-img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 2px solid #ff6b00;
+        }
     </style>
 </head>
 <body class="min-h-screen py-10 px-4 md:px-0">
@@ -77,10 +94,6 @@
                             <button onclick="setMugType('Normal')" id="mugNormal" class="p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] active-prod">Normal White Mug</button>
                             <button onclick="setMugType('Magical')" id="mugMagical" class="p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] border-gray-100">Magical Mug</button>
                         </div>
-                        <div class="bg-white p-5 rounded-[1.5rem] border border-gray-100 shadow-sm flex justify-between items-center">
-                            <span class="font-black uppercase text-[11px] tracking-widest">Quantity</span>
-                            <input type="number" id="mugQty" value="1" min="1" class="w-16 p-3 rounded-xl text-center font-black outline-none bg-gray-50 border-2 border-transparent focus:border-[#ff6b00]">
-                        </div>
                     </div>
                 </div>
 
@@ -93,8 +106,16 @@
                     </div>
                     
                     <div class="space-y-3">
-                        <label class="font-black uppercase text-[10px] text-gray-400 ml-2">Designs (Select Multiple Photos)</label>
-                        <input type="file" id="designFile" accept="image/*" multiple required class="w-full bg-gray-50 rounded-2xl p-4 font-bold text-xs file:bg-black file:text-white file:border-none file:px-4 file:py-2 file:rounded-lg file:mr-4">
+                        <label class="font-black uppercase text-[10px] text-gray-400 ml-2">Upload Designs</label>
+                        <div id="drop-area" class="rounded-[2rem] p-10 text-center cursor-pointer bg-gray-50">
+                            <input type="file" id="designFile" accept="image/*" multiple hidden onchange="handleFiles(this.files)">
+                            <div onclick="document.getElementById('designFile').click()">
+                                <i class="fas fa-cloud-upload-alt text-4xl text-gray-300 mb-4"></i>
+                                <p class="font-black uppercase text-xs tracking-widest">Drag & Drop Photos</p>
+                                <p class="text-[10px] text-gray-400 font-bold mt-1 uppercase">Or click to browse</p>
+                            </div>
+                            <div id="preview-container" class="flex flex-wrap gap-2 mt-6 justify-center"></div>
+                        </div>
                     </div>
 
                     <textarea id="custNeeds" placeholder="Any special requirements?" class="w-full bg-gray-50 border-none rounded-[2.5rem] p-6 h-40 font-bold outline-none ring-1 ring-gray-200 focus:ring-[#ff6b00]"></textarea>
@@ -102,7 +123,7 @@
                     <button onclick="sendOrder()" id="submitBtn" class="w-full bg-[#ff6b00] text-white py-6 rounded-[2.5rem] font-black text-lg uppercase shadow-xl hover:bg-black transition-all">
                         Place Order
                     </button>
-                    <p id="uploadStatus" class="text-center text-[10px] font-bold text-gray-400 uppercase"></p>
+                    <p id="uploadStatus" class="text-center text-[10px] font-bold text-gray-400 uppercase mt-4"></p>
                 </div>
             </div>
         </div>
@@ -111,9 +132,9 @@
             <div class="w-24 h-24 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
                 <i class="fas fa-check text-4xl"></i>
             </div>
-            <h2 class="text-3xl font-black uppercase mb-2">Order Confirmed!</h2>
-            <p class="text-gray-500 font-bold mb-8">We have received your order. We'll contact you if anything else is needed.</p>
-            <button onclick="location.reload()" class="bg-black text-white px-10 py-5 rounded-2xl font-black uppercase text-xs tracking-widest">New Order</button>
+            <h2 class="text-3xl font-black uppercase mb-2 text-[#ff6b00]">Order Sent!</h2>
+            <p class="text-gray-500 font-bold mb-8 leading-relaxed">Your order has been recorded successfully. <br>Our team will reach out shortly.</p>
+            <button onclick="location.reload()" class="bg-black text-white px-10 py-5 rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-[#ff6b00]">Back to Studio</button>
         </div>
     </div>
 
@@ -122,7 +143,51 @@
         let material = "Cotton";
         let mugType = "Normal";
         let finalItems = [];
+        let droppedFiles = [];
 
+        // --- Drag & Drop Logic ---
+        const dropArea = document.getElementById('drop-area');
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) { e.preventDefault(); e.stopPropagation(); }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropArea.addEventListener(eventName, () => dropArea.classList.add('highlight'), false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, () => dropArea.classList.remove('highlight'), false);
+        });
+
+        dropArea.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            let dt = e.dataTransfer;
+            let files = dt.files;
+            handleFiles(files);
+        }
+
+        function handleFiles(files) {
+            droppedFiles = [...files]; // Store the files
+            const previewContainer = document.getElementById('preview-container');
+            previewContainer.innerHTML = '';
+            
+            droppedFiles.forEach(file => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onloadend = () => {
+                    const img = document.createElement('img');
+                    img.src = reader.result;
+                    img.className = 'preview-img';
+                    previewContainer.appendChild(img);
+                };
+            });
+        }
+
+        // --- Studio Logic ---
         function setProduct(p) {
             selectedProduct = p;
             document.getElementById('tshirtFlow').classList.toggle('hidden', p !== 'T-Shirt');
@@ -141,14 +206,7 @@
             
             document.getElementById('cottonDisclaimer').className = isCotton ? 'disclaimer-active p-4 rounded-2xl text-center shadow-md transition-all' : 'disclaimer-inactive p-4 rounded-2xl text-center transition-all';
             document.getElementById('jerseyDisclaimer').className = !isCotton ? 'disclaimer-active p-4 rounded-2xl text-center shadow-md transition-all' : 'disclaimer-inactive p-4 rounded-2xl text-center transition-all';
-            
             renderColors();
-        }
-
-        function setMugType(t) {
-            mugType = t;
-            document.getElementById('mugNormal').className = t === 'Normal' ? 'p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] active-prod' : 'p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] border-gray-100';
-            document.getElementById('mugMagical').className = t === 'Magical' ? 'p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] active-prod' : 'p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] border-gray-100';
         }
 
         const colorMap = { "White": "#FFFFFF", "Black": "#000000", "Orange": "#FF6B00", "Maroon": "#800000", "Brown": "#5C4033", "Blue": "#0000FF", "Yellow": "#FFFF00", "Neon Yellow": "#CCFF00" };
@@ -176,22 +234,18 @@
         async function sendOrder() {
             const name = document.getElementById('custName').value;
             const phone = document.getElementById('custPhone').value;
-            const needs = document.getElementById('custNeeds').value;
-            const fileInput = document.getElementById('designFile');
-            const status = document.getElementById('uploadStatus');
             const btn = document.getElementById('submitBtn');
+            const status = document.getElementById('uploadStatus');
 
-            if (!name || !phone) return alert("Please enter Name and Phone Number");
-            if (fileInput.files.length === 0) return alert("Please upload your designs");
+            if (!name || !phone) return alert("Please enter Name and Phone");
+            if (droppedFiles.length === 0) return alert("Please drag or select at least one design photo");
 
             btn.disabled = true;
-            btn.innerText = "UPLOADING...";
-            status.innerText = "⏳ Processing " + fileInput.files.length + " images...";
+            btn.innerText = "SENDING...";
+            status.innerText = "⏳ Uploading " + droppedFiles.length + " files...";
 
             let imageArray = [];
-            const files = fileInput.files;
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
+            for (let file of droppedFiles) {
                 const base64 = await new Promise(resolve => {
                     const reader = new FileReader();
                     reader.onload = () => resolve(reader.result.split(',')[1]);
@@ -200,18 +254,10 @@
                 imageArray.push({ name: file.name, data: base64 });
             }
 
-            let orderSummary = "";
-            if (selectedProduct === "T-Shirt") {
-                orderSummary = `Type: ${material} | Items: `;
-                finalItems.forEach((item, idx) => {
-                    const size = document.querySelector(`input[name="size-${idx}"]:checked`).value;
-                    orderSummary += `[${item.color}: ${size}] `;
-                });
-            } else {
-                orderSummary = `Mug: ${mugType} | Qty: ${document.getElementById('mugQty').value}`;
-            }
+            let orderSummary = (selectedProduct === "T-Shirt") 
+                ? `Type: ${material} | Items: ` + finalItems.map((it, idx) => `[${it.color}: ${document.querySelector('input[name="size-'+idx+'"]:checked').value}]`).join(' ')
+                : `Mug: ${mugType} | Qty: ${document.getElementById('mugQty') ? document.getElementById('mugQty').value : 1}`;
 
-            // USE YOUR GOOGLE SCRIPT URL HERE
             const GOOGLE_URL = "https://script.google.com/macros/s/AKfycbwlbk-H2Drqq4fDQHMcDo5c6f0C6IZpkKDJw19SptTcHSNOq_x8i6Z1HNQL-Hs8-Tqx/exec";
             
             try {
@@ -223,21 +269,19 @@
                         phone: phone,
                         product: selectedProduct,
                         details: orderSummary,
-                        notes: needs,
+                        notes: document.getElementById('custNeeds').value,
                         images: imageArray
                     })
                 });
-
                 document.getElementById('studioPanel').classList.add('hidden');
                 document.getElementById('successPanel').classList.remove('hidden');
                 window.scrollTo(0,0);
             } catch (e) {
-                alert("Submission failed. Please check your connection.");
+                alert("Submission failed. Try again.");
                 btn.disabled = false;
-                btn.innerText = "Place Order";
             }
         }
-        window.onload = () => { renderColors(); setMugType('Normal'); };
+        window.onload = () => { renderColors(); };
     </script>
 </body>
 </html>
