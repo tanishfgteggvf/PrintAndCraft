@@ -11,7 +11,7 @@
         body { font-family: 'Inter', sans-serif; background-color: #f8f8f8; color: #1a1a1a; scroll-behavior: smooth; }
         .glass-panel { background: white; border-radius: 3rem; border: 1px solid #f0f0f0; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.08); }
         .step-tag { background: #ff6b00; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 900; color: white; text-transform: uppercase; }
-        .active-prod { border-color: #ff6b00 !important; background-color: #fff7ed !important; }
+        .active-prod { border-color: #ff6b00 !important; background-color: #fff7ed !important; color: #ff6b00 !important; }
         
         /* BIG WARNING BOXES */
         .warning-active { background-color: #ff6b00; color: white; transform: scale(1.02); box-shadow: 0 10px 20px -5px rgba(255, 107, 0, 0.4); }
@@ -33,12 +33,16 @@
                 <div class="space-y-6">
                     <div class="flex items-center gap-3"><span class="step-tag">Step 01</span><label class="font-black uppercase text-xs tracking-widest">Select Product</label></div>
                     <div class="grid grid-cols-2 gap-4">
-                        <button onclick="setProduct('T-Shirt')" id="prodTshirt" class="active-prod p-6 border-2 border-gray-100 rounded-[2rem] font-black uppercase text-xs transition-all"><i class="fas fa-tshirt text-2xl mb-2 block"></i>T-Shirt</button>
-                        <button onclick="setProduct('Mug')" id="prodMug" class="p-6 border-2 border-gray-100 bg-white rounded-[2rem] font-black uppercase text-xs transition-all"><i class="fas fa-mug-hot text-2xl mb-2 block"></i>Custom Mug</button>
+                        <button onclick="setProduct('T-Shirt')" id="prodTshirt" class="active-prod p-6 border-4 border-gray-100 rounded-[2rem] font-black uppercase text-xs transition-all flex flex-col items-center">
+                            <i class="fas fa-tshirt text-2xl mb-2"></i>T-Shirt
+                        </button>
+                        <button onclick="setProduct('Mug')" id="prodMug" class="p-6 border-4 border-gray-100 bg-white rounded-[2rem] font-black uppercase text-xs transition-all flex flex-col items-center">
+                            <i class="fas fa-mug-hot text-2xl mb-2"></i>Custom Mug
+                        </button>
                     </div>
                 </div>
 
-                <div id="tshirtFlow" class="space-y-12">
+                <div id="tshirtSection" class="space-y-12">
                     <div class="space-y-6">
                         <div class="flex items-center gap-3"><span class="step-tag">Step 02</span><label class="font-black uppercase text-xs tracking-widest">Select Material</label></div>
                         <div class="grid grid-cols-2 gap-4">
@@ -60,34 +64,42 @@
                     </div>
                 </div>
 
-                <div id="mugFlow" class="space-y-8 hidden">
+                <div id="mugSection" class="space-y-8 hidden">
                     <div class="space-y-6">
-                        <div class="flex items-center gap-3"><span class="step-tag">Step 02</span><label class="font-black uppercase text-xs tracking-widest">Mug Type</label></div>
+                        <div class="flex items-center gap-3"><span class="step-tag">Step 02</span><label class="font-black uppercase text-xs tracking-widest">Mug Style</label></div>
                         <div class="grid grid-cols-2 gap-4">
-                            <button onclick="setMugType('Normal')" id="mugNormal" class="p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] active-prod transition-all">Normal White Mug</button>
-                            <button onclick="setMugType('Magical')" id="mugMagical" class="p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] border-gray-100 transition-all">Magical Mug</button>
+                            <button onclick="setMugType('Normal')" id="btnNormal" class="p-5 border-4 rounded-[1.5rem] font-black uppercase text-[10px] active-prod">Normal White Mug</button>
+                            <button onclick="setMugType('Magical')" id="btnMagical" class="p-5 border-4 rounded-[1.5rem] font-black uppercase text-[10px] border-gray-100">Magical Mug</button>
+                        </div>
+                    </div>
+
+                    <div id="handleSelectionArea" class="space-y-6 pt-4 border-t border-gray-100 hidden">
+                        <div class="flex items-center gap-3"><span class="step-tag">Step 03</span><label class="font-black uppercase text-xs tracking-widest">Handle Shape</label></div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <button onclick="setHandle('Normal')" id="btnHandleNormal" class="p-5 border-4 rounded-[1.5rem] font-black uppercase text-[10px] active-prod">Normal Handle</button>
+                            <button onclick="setHandle('Heart')" id="btnHandleHeart" class="p-5 border-4 rounded-[1.5rem] font-black uppercase text-[10px] border-gray-100">Heart Shape</button>
                         </div>
                     </div>
                 </div>
 
                 <div class="space-y-6 pt-6 border-t border-gray-100">
-                    <div class="flex items-center gap-3"><span class="step-tag">Upload</span><label class="font-black uppercase text-xs tracking-widest">Designs (Multiple)</label></div>
+                    <div class="flex items-center gap-3"><span class="step-tag">Upload</span><label class="font-black uppercase text-xs tracking-widest">Add Designs</label></div>
                     <div id="drop-area" class="rounded-[2.5rem] p-10 text-center bg-gray-50" onclick="document.getElementById('fileInput').click()">
                         <input type="file" id="fileInput" multiple accept="image/*" class="hidden" onchange="handleFiles(this.files)">
                         <i class="fas fa-cloud-upload-alt text-5xl text-gray-300 mb-4"></i>
-                        <p class="font-black uppercase text-sm tracking-widest">Drag & Drop Photos</p>
-                        <p class="text-[10px] text-gray-400 font-bold mt-2 uppercase">or click to select multiple files</p>
+                        <p class="font-black uppercase text-sm tracking-widest">Drag & Drop Multiple Photos</p>
+                        <p class="text-[10px] text-gray-400 font-bold mt-2 uppercase">or click to browse</p>
                         <div id="previewGallery" class="flex flex-wrap gap-3 justify-center mt-6"></div>
                     </div>
                 </div>
 
                 <div class="space-y-4 pt-6">
-                    <div class="flex items-center gap-3 mb-2"><span class="step-tag">Final</span><label class="font-black uppercase text-xs tracking-widest">Order Details</label></div>
+                    <div class="flex items-center gap-3 mb-2"><span class="step-tag">Final</span><label class="font-black uppercase text-xs tracking-widest">Customer Info</label></div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <input type="text" id="custName" placeholder="Full Name *" required class="w-full bg-gray-50 rounded-2xl p-5 font-bold outline-none ring-1 ring-gray-200 focus:ring-[#ff6b00]">
-                        <input type="tel" id="custPhone" placeholder="Mobile Number *" required class="w-full bg-gray-50 rounded-2xl p-5 font-bold outline-none ring-1 ring-gray-200 focus:ring-[#ff6b00]">
+                        <input type="text" id="custName" placeholder="Full Name *" class="w-full bg-gray-50 rounded-2xl p-5 font-bold outline-none ring-1 ring-gray-200 focus:ring-[#ff6b00]">
+                        <input type="tel" id="custPhone" placeholder="Mobile Number *" class="w-full bg-gray-50 rounded-2xl p-5 font-bold outline-none ring-1 ring-gray-200 focus:ring-[#ff6b00]">
                     </div>
-                    <textarea id="custNeeds" placeholder="Any special requirements, sizes, or custom messages?" class="w-full bg-gray-50 border-none rounded-[2rem] p-6 h-32 font-bold outline-none ring-1 ring-gray-200 focus:ring-[#ff6b00]"></textarea>
+                    <textarea id="custNotes" placeholder="Special requirements, sizes, or custom text..." class="w-full bg-gray-50 border-none rounded-[2rem] p-6 h-32 font-bold outline-none ring-1 ring-gray-200 focus:ring-[#ff6b00]"></textarea>
                     
                     <button onclick="sendOrder()" id="submitBtn" class="w-full bg-[#ff6b00] text-white py-6 rounded-[2.5rem] font-black text-lg uppercase shadow-xl hover:bg-black transition-all mt-4">Place Order</button>
                     <p id="statusTxt" class="text-center text-[10px] font-black uppercase text-gray-400 mt-2"></p>
@@ -98,45 +110,54 @@
         <div id="successPanel" class="hidden glass-panel p-20 text-center">
             <i class="fas fa-check-circle text-6xl text-green-500 mb-6"></i>
             <h2 class="text-3xl font-black uppercase">Order Received!</h2>
-            <p class="text-gray-500 font-bold mt-4">We will contact you shortly.</p>
+            <p class="text-gray-500 font-bold mt-4">We will contact you via WhatsApp shortly.</p>
         </div>
     </div>
 
     <script>
-        let selectedProduct = 'T-Shirt';
-        let currentMaterial = 'Cotton';
-        let currentMug = 'Normal';
+        let productType = 'T-Shirt';
+        let materialType = 'Cotton';
+        let mugType = 'Normal';
+        let handleType = 'Normal';
         let selectedFiles = [];
 
-        // 1. PRODUCT SWITCHER
         function setProduct(p) {
-            selectedProduct = p;
-            document.getElementById('tshirtFlow').classList.toggle('hidden', p !== 'T-Shirt');
-            document.getElementById('mugFlow').classList.toggle('hidden', p !== 'Mug');
+            productType = p;
+            const isTshirt = p === 'T-Shirt';
+            document.getElementById('tshirtSection').classList.toggle('hidden', !isTshirt);
+            document.getElementById('mugSection').classList.toggle('hidden', isTshirt);
             
-            document.getElementById('prodTshirt').className = p === 'T-Shirt' ? 'active-prod p-6 border-2 border-gray-100 rounded-[2rem] font-black uppercase text-xs' : 'p-6 border-2 border-gray-100 bg-white rounded-[2rem] font-black uppercase text-xs';
-            document.getElementById('prodMug').className = p === 'Mug' ? 'active-prod p-6 border-2 border-gray-100 rounded-[2rem] font-black uppercase text-xs' : 'p-6 border-2 border-gray-100 bg-white rounded-[2rem] font-black uppercase text-xs';
+            document.getElementById('prodTshirt').className = isTshirt ? 'active-prod p-6 border-4 border-gray-100 rounded-[2rem] font-black uppercase text-xs transition-all flex flex-col items-center' : 'p-6 border-4 border-gray-100 bg-white rounded-[2rem] font-black uppercase text-xs transition-all flex flex-col items-center';
+            document.getElementById('prodMug').className = !isTshirt ? 'active-prod p-6 border-4 border-gray-100 rounded-[2rem] font-black uppercase text-xs transition-all flex flex-col items-center' : 'p-6 border-4 border-gray-100 bg-white rounded-[2rem] font-black uppercase text-xs transition-all flex flex-col items-center';
         }
 
-        // 2. MATERIAL TOGGLE
         function setMaterial(m) {
-            currentMaterial = m;
+            materialType = m;
             const isCotton = m === 'Cotton';
             document.getElementById('btnCotton').className = isCotton ? 'w-full py-5 rounded-3xl font-black uppercase text-xs border-2 border-[#ff6b00] bg-white' : 'w-full py-5 rounded-3xl font-black uppercase text-xs border-2 border-gray-100 text-gray-400';
             document.getElementById('btnJersey').className = !isCotton ? 'w-full py-5 rounded-3xl font-black uppercase text-xs border-2 border-[#ff6b00] bg-white' : 'w-full py-5 rounded-3xl font-black uppercase text-xs border-2 border-gray-100 text-gray-400';
-            
             document.getElementById('warnCotton').className = isCotton ? 'warning-active p-5 rounded-2xl text-center transition-all' : 'warning-inactive p-5 rounded-2xl text-center transition-all';
             document.getElementById('warnJersey').className = !isCotton ? 'warning-active p-5 rounded-2xl text-center transition-all' : 'warning-inactive p-5 rounded-2xl text-center transition-all';
         }
 
-        // 3. MUG TOGGLE
         function setMugType(t) {
-            currentMug = t;
-            document.getElementById('mugNormal').className = t === 'Normal' ? 'p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] active-prod transition-all' : 'p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] border-gray-100 transition-all';
-            document.getElementById('mugMagical').className = t === 'Magical' ? 'p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] active-prod transition-all' : 'p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] border-gray-100 transition-all';
+            mugType = t;
+            const isMagical = t === 'Magical';
+            document.getElementById('btnNormal').className = !isMagical ? 'p-5 border-4 rounded-[1.5rem] font-black uppercase text-[10px] active-prod' : 'p-5 border-4 rounded-[1.5rem] font-black uppercase text-[10px] border-gray-100';
+            document.getElementById('btnMagical').className = isMagical ? 'p-5 border-4 rounded-[1.5rem] font-black uppercase text-[10px] active-prod' : 'p-5 border-4 rounded-[1.5rem] font-black uppercase text-[10px] border-gray-100';
+            
+            // SHOW HANDLE SELECTION ONLY FOR MAGIC MUG
+            document.getElementById('handleSelectionArea').classList.toggle('hidden', !isMagical);
+            if(!isMagical) handleType = 'Normal'; // Reset for normal mug
         }
 
-        // 4. FILE HANDLING
+        function setHandle(h) {
+            handleType = h;
+            const isHeart = h === 'Heart';
+            document.getElementById('btnHandleNormal').className = !isHeart ? 'p-5 border-4 rounded-[1.5rem] font-black uppercase text-[10px] active-prod' : 'p-5 border-4 rounded-[1.5rem] font-black uppercase text-[10px] border-gray-100';
+            document.getElementById('btnHandleHeart').className = isHeart ? 'p-5 border-4 rounded-[1.5rem] font-black uppercase text-[10px] active-prod' : 'p-5 border-4 rounded-[1.5rem] font-black uppercase text-[10px] border-gray-100';
+        }
+
         const dropArea = document.getElementById('drop-area');
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(e => dropArea.addEventListener(e, (ev) => { ev.preventDefault(); ev.stopPropagation(); }, false));
         dropArea.addEventListener('drop', (e) => handleFiles(e.dataTransfer.files), false);
@@ -157,44 +178,47 @@
             });
         }
 
-        // 5. SUBMISSION
         async function sendOrder() {
             const name = document.getElementById('custName').value;
             const phone = document.getElementById('custPhone').value;
-            const notes = document.getElementById('custNeeds').value;
+            if(!name || !phone || selectedFiles.length === 0) return alert("Fill all fields!");
+
             const btn = document.getElementById('submitBtn');
-
-            if (!name || !phone || selectedFiles.length === 0) return alert("Fill all fields and add photos!");
-
             btn.disabled = true; btn.innerText = "UPLOADING...";
 
-            let imagesArray = [];
+            let images = [];
             for (let file of selectedFiles) {
                 const base64 = await new Promise(r => {
-                    const reader = new FileReader();
-                    reader.onload = () => r(reader.result.split(',')[1]);
-                    reader.readAsDataURL(file);
+                    const rd = new FileReader();
+                    rd.onload = () => r(rd.result.split(',')[1]);
+                    rd.readAsDataURL(file);
                 });
-                imagesArray.push({ name: file.name, data: base64 });
+                images.push({ name: file.name, data: base64 });
             }
 
-            const details = (selectedProduct === 'T-Shirt') ? `Material: ${currentMaterial}` : `Mug Type: ${currentMug}`;
+            // Construct detail string clearly for the Google Sheet
+            let finalDetail = productType === 'T-Shirt' 
+                ? `Material: ${materialType}` 
+                : `Type: ${mugType} | Handle: ${handleType}`;
 
             const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwlbk-H2Drqq4fDQHMcDo5c6f0C6IZpkKDJw19SptTcHSNOq_x8i6Z1HNQL-Hs8-Tqx/exec";
 
-            try {
-                await fetch(SCRIPT_URL, {
-                    method: "POST",
-                    mode: "no-cors",
-                    body: JSON.stringify({ name, phone, product: selectedProduct, details, notes, images: imagesArray })
-                });
+            fetch(SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors",
+                body: JSON.stringify({
+                    name: name,
+                    phone: phone,
+                    product: productType,
+                    details: finalDetail,
+                    notes: document.getElementById('custNotes').value,
+                    images: images
+                })
+            }).then(() => {
                 document.getElementById('studioPanel').classList.add('hidden');
                 document.getElementById('successPanel').classList.remove('hidden');
                 window.scrollTo(0,0);
-            } catch (e) {
-                alert("Upload failed. Try again.");
-                btn.disabled = false;
-            }
+            });
         }
     </script>
 </body>
