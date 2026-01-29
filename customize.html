@@ -11,23 +11,12 @@
         body { font-family: 'Inter', sans-serif; background-color: #f8f8f8; color: #1a1a1a; scroll-behavior: smooth; }
         .glass-panel { background: white; border-radius: 3rem; border: 1px solid #f0f0f0; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.08); }
         .step-tag { background: #ff6b00; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 900; color: white; text-transform: uppercase; }
-        .active-prod { border-color: #ff6b00; background-color: #fff7ed; }
+        .active-prod { border-color: #ff6b00 !important; background-color: #fff7ed !important; }
         .color-swatch { width: 24px; height: 24px; border-radius: 6px; border: 1px solid rgba(0,0,0,0.1); }
         
-        /* Disclaimer Styling */
-        .disclaimer-box { 
-            padding: 16px; 
-            border-radius: 20px; 
-            margin-top: 12px; 
-            text-align: center; 
-            border: 2px dashed;
-        }
-        .disclaimer-text { 
-            font-size: 14px; 
-            font-weight: 900; 
-            text-transform: uppercase; 
-            letter-spacing: 1px;
-        }
+        /* High-Visibility Disclaimers */
+        .disclaimer-active { background-color: #ea580c; color: white; transform: scale(1.05); }
+        .disclaimer-inactive { background-color: #e5e7eb; color: #9ca3af; opacity: 0.5; transform: scale(1); }
     </style>
 </head>
 <body class="min-h-screen py-10 px-4 md:px-0">
@@ -45,29 +34,28 @@
                 <div class="space-y-6">
                     <div class="flex items-center gap-3"><span class="step-tag">Step 01</span><label class="font-black uppercase text-xs tracking-widest">Select Product</label></div>
                     <div class="grid grid-cols-2 gap-4">
-                        <button onclick="setProduct('T-Shirt')" id="prodTshirt" class="active-prod p-6 border-2 rounded-[2rem] font-black uppercase text-xs transition-all">
-                            <i class="fas fa-tshirt text-2xl mb-2 block"></i>T-Shirt
-                        </button>
-                        <button onclick="setMugFlow()" id="prodMug" class="p-6 border-2 border-gray-100 bg-white rounded-[2rem] font-black uppercase text-xs transition-all">
-                            <i class="fas fa-mug-hot text-2xl mb-2 block"></i>Custom Mug
-                        </button>
+                        <button onclick="setProduct('T-Shirt')" id="prodTshirt" class="active-prod p-6 border-2 border-gray-100 rounded-[2rem] font-black uppercase text-xs transition-all"><i class="fas fa-tshirt text-2xl mb-2 block"></i>T-Shirt</button>
+                        <button onclick="setMugFlow()" id="prodMug" class="p-6 border-2 border-gray-100 bg-white rounded-[2rem] font-black uppercase text-xs transition-all"><i class="fas fa-mug-hot text-2xl mb-2 block"></i>Custom Mug</button>
                     </div>
                 </div>
 
                 <div id="tshirtFlow" class="space-y-14">
                     <div class="space-y-8">
                         <div class="flex items-center gap-3"><span class="step-tag">Step 02</span><label class="font-black uppercase text-xs tracking-widest">Material & Colours</label></div>
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <button onclick="setMaterial('Cotton')" id="btnCotton" class="w-full py-5 rounded-2xl font-black uppercase text-xs bg-white border-2 border-[#ff6b00]">Cotton</button>
-                                <div id="cottonDisclaimer" class="disclaimer-box border-[#ff6b00] bg-orange-50 text-[#ff6b00]">
-                                    <span class="disclaimer-text"><i class="fas fa-exclamation-triangle mr-2"></i> DTF Mono Colour Only</span>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="space-y-3">
+                                <button onclick="setMaterial('Cotton')" id="btnCotton" class="w-full py-5 rounded-3xl font-black uppercase text-xs bg-white border-2 border-[#ff6b00]">Cotton</button>
+                                <div id="cottonDisclaimer" class="disclaimer-active p-4 rounded-2xl text-center shadow-md transition-all">
+                                    <i class="fas fa-exclamation-triangle block mb-1"></i>
+                                    <span class="font-black text-[10px] uppercase block">DTF MONO<br>COLOUR ONLY</span>
                                 </div>
                             </div>
-                            <div>
-                                <button onclick="setMaterial('Jersey')" id="btnJersey" class="w-full py-5 rounded-2xl font-black uppercase text-xs bg-transparent border-2 border-gray-100 text-gray-400">Jersey</button>
-                                <div id="jerseyDisclaimer" class="disclaimer-box border-gray-200 bg-gray-50 text-gray-400 opacity-50">
-                                    <span class="disclaimer-text"><i class="fas fa-camera mr-2"></i> Photo Prints Only</span>
+                            <div class="space-y-3">
+                                <button onclick="setMaterial('Jersey')" id="btnJersey" class="w-full py-5 rounded-3xl font-black uppercase text-xs bg-transparent border-2 border-gray-100 text-gray-400">Jersey</button>
+                                <div id="jerseyDisclaimer" class="disclaimer-inactive p-4 rounded-2xl text-center transition-all">
+                                    <i class="fas fa-camera block mb-1"></i>
+                                    <span class="font-black text-[10px] uppercase block">PHOTO PRINTS<br>ONLY</span>
                                 </div>
                             </div>
                         </div>
@@ -97,35 +85,35 @@
                 </div>
 
                 <div class="space-y-6 pt-6 border-t border-gray-100">
-                    <div class="flex items-center gap-3"><span class="step-tag">Final</span><label class="font-black uppercase text-xs tracking-widest">Customer Info</label></div>
+                    <div class="flex items-center gap-3"><span class="step-tag">Final</span><label class="font-black uppercase text-xs tracking-widest">Order Info</label></div>
                     
-                    <div class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <input type="text" id="custName" placeholder="Full Name *" required class="w-full bg-gray-50 border-none rounded-2xl p-5 font-bold outline-none ring-1 ring-gray-200 focus:ring-[#ff6b00]">
                         <input type="tel" id="custPhone" placeholder="Mobile Number *" required class="w-full bg-gray-50 border-none rounded-2xl p-5 font-bold outline-none ring-1 ring-gray-200 focus:ring-[#ff6b00]">
                     </div>
                     
                     <div class="space-y-3">
-                        <label class="font-black uppercase text-[10px] text-gray-400 ml-2">Upload Designs (Hold 'Shift' or 'Ctrl' to select multiple)</label>
+                        <label class="font-black uppercase text-[10px] text-gray-400 ml-2">Designs (Select Multiple Photos)</label>
                         <input type="file" id="designFile" accept="image/*" multiple required class="w-full bg-gray-50 rounded-2xl p-4 font-bold text-xs file:bg-black file:text-white file:border-none file:px-4 file:py-2 file:rounded-lg file:mr-4">
-                        <p id="uploadStatus" class="text-[10px] font-bold text-[#ff6b00] uppercase ml-2"></p>
                     </div>
 
-                    <textarea id="custNeeds" placeholder="Anything else we should know?" class="w-full bg-gray-50 border-none rounded-[2.5rem] p-6 h-40 font-bold outline-none ring-1 ring-gray-200 focus:ring-[#ff6b00]"></textarea>
+                    <textarea id="custNeeds" placeholder="Any special requirements?" class="w-full bg-gray-50 border-none rounded-[2.5rem] p-6 h-40 font-bold outline-none ring-1 ring-gray-200 focus:ring-[#ff6b00]"></textarea>
 
                     <button onclick="sendOrder()" id="submitBtn" class="w-full bg-[#ff6b00] text-white py-6 rounded-[2.5rem] font-black text-lg uppercase shadow-xl hover:bg-black transition-all">
-                        Confirm & Place Order
+                        Place Order
                     </button>
+                    <p id="uploadStatus" class="text-center text-[10px] font-bold text-gray-400 uppercase"></p>
                 </div>
             </div>
         </div>
 
         <div id="successPanel" class="hidden glass-panel p-12 text-center">
-            <div class="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                <i class="fas fa-check text-3xl"></i>
+            <div class="w-24 h-24 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fas fa-check text-4xl"></i>
             </div>
-            <h2 class="text-3xl font-black uppercase mb-2">Order Received!</h2>
-            <p class="text-gray-500 font-bold mb-8">We have successfully received your details and designs.</p>
-            <button onclick="location.reload()" class="bg-black text-white px-8 py-4 rounded-2xl font-black uppercase text-xs tracking-widest">Place Another Order</button>
+            <h2 class="text-3xl font-black uppercase mb-2">Order Confirmed!</h2>
+            <p class="text-gray-500 font-bold mb-8">We have received your order. We'll contact you if anything else is needed.</p>
+            <button onclick="location.reload()" class="bg-black text-white px-10 py-5 rounded-2xl font-black uppercase text-xs tracking-widest">New Order</button>
         </div>
     </div>
 
@@ -139,8 +127,8 @@
             selectedProduct = p;
             document.getElementById('tshirtFlow').classList.toggle('hidden', p !== 'T-Shirt');
             document.getElementById('mugFlow').classList.toggle('hidden', p !== 'Mug');
-            document.getElementById('prodTshirt').className = p === 'T-Shirt' ? 'active-prod p-6 border-2 rounded-[2rem] font-black uppercase text-xs transition-all' : 'p-6 border-2 border-gray-100 bg-white rounded-[2rem] font-black uppercase text-xs transition-all';
-            document.getElementById('prodMug').className = p === 'Mug' ? 'active-prod p-6 border-2 rounded-[2rem] font-black uppercase text-xs transition-all' : 'p-6 border-2 border-gray-100 bg-white rounded-[2rem] font-black uppercase text-xs transition-all';
+            document.getElementById('prodTshirt').className = p === 'T-Shirt' ? 'active-prod p-6 border-2 border-gray-100 rounded-[2rem] font-black uppercase text-xs' : 'p-6 border-2 border-gray-100 bg-white rounded-[2rem] font-black uppercase text-xs';
+            document.getElementById('prodMug').className = p === 'Mug' ? 'active-prod p-6 border-2 border-gray-100 rounded-[2rem] font-black uppercase text-xs' : 'p-6 border-2 border-gray-100 bg-white rounded-[2rem] font-black uppercase text-xs';
         }
 
         function setMugFlow() { setProduct('Mug'); }
@@ -148,13 +136,11 @@
         function setMaterial(m) {
             material = m;
             const isCotton = m === 'Cotton';
-            // Button styles
-            document.getElementById('btnCotton').className = isCotton ? 'w-full py-5 rounded-2xl font-black uppercase text-xs bg-white border-2 border-[#ff6b00]' : 'w-full py-5 rounded-2xl font-black uppercase text-xs bg-transparent border-2 border-gray-100 text-gray-400';
-            document.getElementById('btnJersey').className = !isCotton ? 'w-full py-5 rounded-2xl font-black uppercase text-xs bg-white border-2 border-[#ff6b00]' : 'w-full py-5 rounded-2xl font-black uppercase text-xs bg-transparent border-2 border-gray-100 text-gray-400';
+            document.getElementById('btnCotton').className = isCotton ? 'w-full py-5 rounded-3xl font-black uppercase text-xs bg-white border-2 border-[#ff6b00]' : 'w-full py-5 rounded-3xl font-black uppercase text-xs bg-transparent border-2 border-gray-100 text-gray-400';
+            document.getElementById('btnJersey').className = !isCotton ? 'w-full py-5 rounded-3xl font-black uppercase text-xs bg-white border-2 border-[#ff6b00]' : 'w-full py-5 rounded-3xl font-black uppercase text-xs bg-transparent border-2 border-gray-100 text-gray-400';
             
-            // Disclaimer styles
-            document.getElementById('cottonDisclaimer').className = isCotton ? 'disclaimer-box border-[#ff6b00] bg-orange-50 text-[#ff6b00]' : 'disclaimer-box border-gray-200 bg-gray-50 text-gray-400 opacity-50';
-            document.getElementById('jerseyDisclaimer').className = !isCotton ? 'disclaimer-box border-[#ff6b00] bg-orange-50 text-[#ff6b00]' : 'disclaimer-box border-gray-200 bg-gray-50 text-gray-400 opacity-50';
+            document.getElementById('cottonDisclaimer').className = isCotton ? 'disclaimer-active p-4 rounded-2xl text-center shadow-md transition-all' : 'disclaimer-inactive p-4 rounded-2xl text-center transition-all';
+            document.getElementById('jerseyDisclaimer').className = !isCotton ? 'disclaimer-active p-4 rounded-2xl text-center shadow-md transition-all' : 'disclaimer-inactive p-4 rounded-2xl text-center transition-all';
             
             renderColors();
         }
@@ -196,16 +182,16 @@
             const btn = document.getElementById('submitBtn');
 
             if (!name || !phone) return alert("Please enter Name and Phone Number");
-            if (fileInput.files.length === 0) return alert("Please upload at least one design photo");
+            if (fileInput.files.length === 0) return alert("Please upload your designs");
 
             btn.disabled = true;
-            btn.innerText = "UPLOADING ALL FILES...";
-            status.innerText = "⏳ Processing " + fileInput.files.length + " designs...";
+            btn.innerText = "UPLOADING...";
+            status.innerText = "⏳ Processing " + fileInput.files.length + " images...";
 
-            // MULTI-FILE CONVERSION LOGIC
             let imageArray = [];
-            for (let i = 0; i < fileInput.files.length; i++) {
-                const file = fileInput.files[i];
+            const files = fileInput.files;
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
                 const base64 = await new Promise(resolve => {
                     const reader = new FileReader();
                     reader.onload = () => resolve(reader.result.split(',')[1]);
@@ -225,6 +211,7 @@
                 orderSummary = `Mug: ${mugType} | Qty: ${document.getElementById('mugQty').value}`;
             }
 
+            // USE YOUR GOOGLE SCRIPT URL HERE
             const GOOGLE_URL = "https://script.google.com/macros/s/AKfycbwlbk-H2Drqq4fDQHMcDo5c6f0C6IZpkKDJw19SptTcHSNOq_x8i6Z1HNQL-Hs8-Tqx/exec";
             
             try {
@@ -237,7 +224,7 @@
                         product: selectedProduct,
                         details: orderSummary,
                         notes: needs,
-                        images: imageArray // Sending the full array to our updated script
+                        images: imageArray
                     })
                 });
 
@@ -245,12 +232,11 @@
                 document.getElementById('successPanel').classList.remove('hidden');
                 window.scrollTo(0,0);
             } catch (e) {
-                alert("Error sending. Check your internet.");
+                alert("Submission failed. Please check your connection.");
                 btn.disabled = false;
-                btn.innerText = "Confirm & Place Order";
+                btn.innerText = "Place Order";
             }
         }
-
         window.onload = () => { renderColors(); setMugType('Normal'); };
     </script>
 </body>
