@@ -8,14 +8,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8f8f8; color: #1a1a1a; scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; background-color: #f8f8f8; color: #1a1a1a; }
         .glass-panel { background: white; border-radius: 3rem; border: 1px solid #f0f0f0; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.08); }
         .step-tag { background: #ff6b00; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 900; color: white; text-transform: uppercase; }
         .active-prod { border-color: #ff6b00 !important; background-color: #fff7ed !important; color: #ff6b00 !important; }
         .warning-active { background-color: #ff6b00; color: white; transform: scale(1.02); }
         .warning-inactive { background-color: #f3f4f6; color: #9ca3af; opacity: 0.5; }
-        #drop-area { border: 3px dashed #e5e7eb; transition: all 0.3s ease; cursor: pointer; }
-        #drop-area.highlight { border-color: #ff6b00; background-color: #fff7ed; }
+        #drop-area { border: 3px dashed #e5e7eb; transition: all 0.3s ease; cursor: pointer; border-radius: 2rem; }
         .preview-thumb { width: 70px; height: 70px; object-fit: cover; border-radius: 12px; border: 2px solid #ff6b00; }
     </style>
 </head>
@@ -29,8 +28,8 @@
                 <div class="space-y-6">
                     <div class="flex items-center gap-3"><span class="step-tag">Step 01</span><label class="font-black uppercase text-xs tracking-widest">Select Product</label></div>
                     <div class="grid grid-cols-2 gap-4">
-                        <button onclick="setProduct('T-Shirt')" id="prodTshirt" class="active-prod p-6 border-4 border-gray-100 rounded-[2rem] font-black uppercase text-xs transition-all flex flex-col items-center"><i class="fas fa-tshirt text-2xl mb-2"></i>T-Shirt</button>
-                        <button onclick="setProduct('Mug')" id="prodMug" class="p-6 border-4 border-gray-100 bg-white rounded-[2rem] font-black uppercase text-xs transition-all flex flex-col items-center"><i class="fas fa-mug-hot text-2xl mb-2"></i>Custom Mug</button>
+                        <button onclick="setProduct('T-Shirt')" id="prodTshirt" class="active-prod p-6 border-4 border-gray-100 rounded-[2rem] font-black uppercase text-xs flex flex-col items-center"><i class="fas fa-tshirt text-2xl mb-2"></i>T-Shirt</button>
+                        <button onclick="setProduct('Mug')" id="prodMug" class="p-6 border-4 border-gray-100 bg-white rounded-[2rem] font-black uppercase text-xs flex flex-col items-center"><i class="fas fa-mug-hot text-2xl mb-2"></i>Custom Mug</button>
                     </div>
                 </div>
 
@@ -39,7 +38,7 @@
                         <div class="flex items-center gap-3"><span class="step-tag">Step 02</span><label class="font-black uppercase text-xs tracking-widest">Material</label></div>
                         <div class="grid grid-cols-2 gap-4">
                             <div class="space-y-3">
-                                <button onclick="setMaterial('Cotton')" id="btnCotton" class="w-full py-5 rounded-3xl font-black uppercase text-xs border-2 border-[#ff6b00] bg-white">Cotton</button>
+                                <button onclick="setMaterial('Cotton')" id="btnCotton" class="w-full py-5 rounded-3xl font-black uppercase text-xs border-2 border-[#ff6b00] active-prod">Cotton</button>
                                 <div id="warnCotton" class="warning-active p-5 rounded-2xl text-center"><span class="font-black text-[11px] block leading-tight">DTF MONO ONLY</span></div>
                             </div>
                             <div class="space-y-3">
@@ -59,31 +58,30 @@
                         </div>
                     </div>
                     <div id="handleSelectionArea" class="space-y-6 pt-4 border-t border-gray-100 hidden">
-                        <div class="flex items-center gap-3"><span class="step-tag">Step 03</span><label class="font-black uppercase text-xs tracking-widest">Handle</label></div>
+                        <div class="flex items-center gap-3"><span class="step-tag">Step 03</span><label class="font-black uppercase text-xs tracking-widest">Handle Shape</label></div>
                         <div class="grid grid-cols-2 gap-4">
                             <button onclick="setHandle('Normal')" id="btnHandleNormal" class="p-5 border-4 rounded-[1.5rem] font-black uppercase text-[10px] active-prod">Normal</button>
-                            <button onclick="setHandle('Heart')" id="btnHandleHeart" class="p-5 border-4 rounded-[1.5rem] font-black uppercase text-[10px] border-gray-100">Heart</button>
+                            <button onclick="setHandle('Heart')" id="btnHandleHeart" class="p-5 border-4 rounded-[1.5rem] font-black uppercase text-[10px] border-gray-100">Heart Shape</button>
                         </div>
                     </div>
                 </div>
 
                 <div class="space-y-6 pt-6 border-t border-gray-100">
                     <div class="flex items-center gap-3"><span class="step-tag">Upload</span><label class="font-black uppercase text-xs tracking-widest">Add Designs</label></div>
-                    <div id="drop-area" class="rounded-[2.5rem] p-10 text-center bg-gray-50" onclick="document.getElementById('fileInput').click()">
+                    <div id="drop-area" class="p-10 text-center bg-gray-50" onclick="document.getElementById('fileInput').click()">
                         <input type="file" id="fileInput" multiple accept="image/*" class="hidden" onchange="handleFiles(this.files)">
                         <i class="fas fa-cloud-upload-alt text-5xl text-gray-300 mb-4"></i>
-                        <p class="font-black uppercase text-sm">Drag & Drop Multiple Photos</p>
+                        <p class="font-black uppercase text-sm">Tap to Select Multiple Photos</p>
                         <div id="previewGallery" class="flex flex-wrap gap-3 justify-center mt-6"></div>
                     </div>
                 </div>
 
                 <div class="space-y-4 pt-6">
-                    <input type="text" id="custName" placeholder="Full Name *" class="w-full bg-gray-50 rounded-2xl p-5 font-bold outline-none ring-1 ring-gray-200 focus:ring-[#ff6b00]">
-                    <input type="tel" id="custPhone" placeholder="Mobile Number *" class="w-full bg-gray-50 rounded-2xl p-5 font-bold outline-none ring-1 ring-gray-200 focus:ring-[#ff6b00]">
-                    <textarea id="custNotes" placeholder="Special requirements..." class="w-full bg-gray-50 border-none rounded-[2rem] p-6 h-32 font-bold outline-none ring-1 ring-gray-200 focus:ring-[#ff6b00]"></textarea>
+                    <input type="text" id="custName" placeholder="Full Name *" class="w-full bg-gray-50 rounded-2xl p-5 font-bold outline-none border border-gray-100">
+                    <input type="tel" id="custPhone" placeholder="Mobile Number *" class="w-full bg-gray-50 rounded-2xl p-5 font-bold outline-none border border-gray-100">
+                    <textarea id="custNotes" placeholder="Special requirements (Sizes, text, etc)..." class="w-full bg-gray-50 rounded-[2rem] p-6 h-32 font-bold outline-none border border-gray-100"></textarea>
                     
                     <button onclick="sendOrder()" id="submitBtn" class="w-full bg-[#ff6b00] text-white py-6 rounded-[2.5rem] font-black text-lg uppercase shadow-xl hover:bg-black transition-all">Place Order</button>
-                    <p id="statusTxt" class="text-center text-[10px] font-black uppercase text-gray-400 mt-2"></p>
                 </div>
             </div>
         </div>
@@ -91,6 +89,7 @@
         <div id="successPanel" class="hidden glass-panel p-20 text-center">
             <i class="fas fa-check-circle text-6xl text-green-500 mb-6"></i>
             <h2 class="text-3xl font-black uppercase">Order Received!</h2>
+            <p class="font-bold text-gray-400 mt-2">We will contact you shortly.</p>
         </div>
     </div>
 
@@ -101,22 +100,30 @@
             productType = p;
             document.getElementById('tshirtSection').classList.toggle('hidden', p !== 'T-Shirt');
             document.getElementById('mugSection').classList.toggle('hidden', p !== 'Mug');
-            document.getElementById('prodTshirt').className = p === 'T-Shirt' ? 'active-prod p-6 border-4 border-gray-100 rounded-[2rem] font-black uppercase text-xs transition-all flex flex-col items-center' : 'p-6 border-4 border-gray-100 bg-white rounded-[2rem] font-black uppercase text-xs transition-all flex flex-col items-center';
-            document.getElementById('prodMug').className = p === 'Mug' ? 'active-prod p-6 border-4 border-gray-100 rounded-[2rem] font-black uppercase text-xs transition-all flex flex-col items-center' : 'p-6 border-4 border-gray-100 bg-white rounded-[2rem] font-black uppercase text-xs transition-all flex flex-col items-center';
+            document.getElementById('prodTshirt').className = p === 'T-Shirt' ? 'active-prod p-6 border-4 border-gray-100 rounded-[2rem] font-black uppercase text-xs flex flex-col items-center' : 'p-6 border-4 border-gray-100 bg-white rounded-[2rem] font-black uppercase text-xs flex flex-col items-center';
+            document.getElementById('prodMug').className = p === 'Mug' ? 'active-prod p-6 border-4 border-gray-100 rounded-[2rem] font-black uppercase text-xs flex flex-col items-center' : 'p-6 border-4 border-gray-100 bg-white rounded-[2rem] font-black uppercase text-xs flex flex-col items-center';
         }
 
         function setMaterial(m) {
             materialType = m;
-            document.getElementById('btnCotton').classList.toggle('active-prod', m === 'Cotton');
-            document.getElementById('btnJersey').classList.toggle('active-prod', m === 'Jersey');
+            document.getElementById('btnCotton').className = m === 'Cotton' ? 'w-full py-5 rounded-3xl font-black uppercase text-xs border-2 border-[#ff6b00] active-prod' : 'w-full py-5 rounded-3xl font-black uppercase text-xs border-2 border-gray-100 text-gray-400';
+            document.getElementById('btnJersey').className = m === 'Jersey' ? 'w-full py-5 rounded-3xl font-black uppercase text-xs border-2 border-[#ff6b00] active-prod' : 'w-full py-5 rounded-3xl font-black uppercase text-xs border-2 border-gray-100 text-gray-400';
+            document.getElementById('warnCotton').className = m === 'Cotton' ? 'warning-active p-5 rounded-2xl text-center' : 'warning-inactive p-5 rounded-2xl text-center';
+            document.getElementById('warnJersey').className = m === 'Jersey' ? 'warning-active p-5 rounded-2xl text-center' : 'warning-inactive p-5 rounded-2xl text-center';
         }
 
         function setMugType(t) {
             mugType = t;
+            document.getElementById('btnNormal').className = t === 'Normal' ? 'p-5 border-4 rounded-[1.5rem] font-black uppercase text-[10px] active-prod' : 'p-5 border-4 rounded-[1.5rem] font-black uppercase text-[10px] border-gray-100';
+            document.getElementById('btnMagical').className = t === 'Magical' ? 'p-5 border-4 rounded-[1.5rem] font-black uppercase text-[10px] active-prod' : 'p-5 border-4 rounded-[1.5rem] font-black uppercase text-[10px] border-gray-100';
             document.getElementById('handleSelectionArea').classList.toggle('hidden', t !== 'Magical');
         }
 
-        function setHandle(h) { handleType = h; }
+        function setHandle(h) {
+            handleType = h;
+            document.getElementById('btnHandleNormal').className = h === 'Normal' ? 'p-5 border-4 rounded-[1.5rem] font-black uppercase text-[10px] active-prod' : 'p-5 border-4 rounded-[1.5rem] font-black uppercase text-[10px] border-gray-100';
+            document.getElementById('btnHandleHeart').className = h === 'Heart' ? 'p-5 border-4 rounded-[1.5rem] font-black uppercase text-[10px] active-prod' : 'p-5 border-4 rounded-[1.5rem] font-black uppercase text-[10px] border-gray-100';
+        }
 
         function handleFiles(files) {
             selectedFiles = [...files];
@@ -137,25 +144,25 @@
         async function sendOrder() {
             const name = document.getElementById('custName').value;
             const phone = document.getElementById('custPhone').value;
-            if(!name || !phone || selectedFiles.length === 0) return alert("Missing Name, Phone or Photos!");
+            if(!name || !phone || selectedFiles.length === 0) return alert("Fill Name, Phone and select Designs!");
 
             const btn = document.getElementById('submitBtn');
             btn.disabled = true; btn.innerText = "UPLOADING...";
 
             let imagesArray = [];
             for (let file of selectedFiles) {
-                const base64 = await new Promise(resolve => {
+                const base64 = await new Promise(res => {
                     const reader = new FileReader();
-                    reader.onload = () => resolve(reader.result.split(',')[1]);
+                    reader.onload = () => res(reader.result.split(',')[1]);
                     reader.readAsDataURL(file);
                 });
                 imagesArray.push({ name: file.name, data: base64 });
             }
 
-            const detail = productType === 'T-Shirt' ? `Material: ${materialType}` : `Type: ${mugType} | Handle: ${handleType}`;
+            const details = productType === 'T-Shirt' ? `Material: ${materialType}` : `Type: ${mugType} | Handle: ${handleType}`;
             
-            // USE YOUR LATEST DEPLOYMENT URL
-            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwlbk-H2Drqq4fDQHMcDo5c6f0C6IZpkKDJw19SptTcHSNOq_x8i6Z1HNQL-Hs8-Tqx/exec";
+            // YOUR NEW WEB APP URL
+            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzsBLxdggTIhSF2mO8_0-Gy8nZqstv6zWr1w8iGKGXKn766UMJCVYHM3e353DUIOWEv/exec";
 
             fetch(SCRIPT_URL, {
                 method: "POST",
@@ -164,13 +171,17 @@
                     name: name,
                     phone: phone,
                     product: productType,
-                    details: detail,
+                    details: details,
                     notes: document.getElementById('custNotes').value,
                     images: imagesArray
                 })
             }).then(() => {
                 document.getElementById('studioPanel').classList.add('hidden');
                 document.getElementById('successPanel').classList.remove('hidden');
+                window.scrollTo(0,0);
+            }).catch(() => {
+                alert("Upload failed. Check connection.");
+                btn.disabled = false;
             });
         }
     </script>
