@@ -55,12 +55,16 @@
 
                 <div id="mugFlow" class="space-y-10 hidden">
                     <div class="space-y-6">
-                        <div class="flex items-center gap-3"><span class="step-tag">Step 02</span><label class="font-black uppercase text-xs tracking-widest">Mug Type</label></div>
+                        <div class="flex items-center gap-3"><span class="step-tag">Step 02</span><label class="font-black uppercase text-xs tracking-widest">Mug Details</label></div>
                         <div class="grid grid-cols-2 gap-4">
                             <button onclick="setMugType('Normal')" id="mugNormal" class="p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] active-prod">Normal White Mug</button>
                             <button onclick="setMugType('Magical')" id="mugMagical" class="p-5 border-2 rounded-[1.5rem] font-black uppercase text-[10px] border-gray-100">Magical Mug</button>
                         </div>
                         <div id="mugNotice"></div>
+                        <div class="bg-white p-5 rounded-[1.5rem] border border-gray-100 shadow-sm flex justify-between items-center">
+                            <span class="font-black uppercase text-[11px] tracking-widest">Quantity</span>
+                            <input type="number" id="mugQty" value="1" min="1" class="w-16 p-3 rounded-xl text-center font-black outline-none bg-gray-50 border-2 border-transparent focus:border-[#ff6b00]">
+                        </div>
                     </div>
                     <div id="mugHandleSection" class="space-y-6 hidden">
                         <div class="flex items-center gap-3"><span class="step-tag">Step 03</span><label class="font-black uppercase text-xs tracking-widest">Handle Shape</label></div>
@@ -73,15 +77,23 @@
 
                 <div class="space-y-6 pt-6 border-t border-gray-100">
                     <div class="flex items-center gap-3"><span class="step-tag">Final</span><label class="font-black uppercase text-xs tracking-widest">Customer Info</label></div>
-                    <input type="text" id="custName" placeholder="Your Full Name" class="w-full bg-gray-50 border-none rounded-2xl p-5 font-bold outline-none ring-1 ring-gray-200 focus:ring-[#ff6b00]">
-                    <textarea id="custNeeds" placeholder="Explain your design requirements..." class="w-full bg-gray-50 border-none rounded-[2.5rem] p-6 h-40 font-bold outline-none ring-1 ring-gray-200 focus:ring-[#ff6b00]"></textarea>
                     
-                    <div class="wa-notice flex items-start gap-3">
-                        <i class="fas fa-paperclip mt-1"></i>
-                        <p class="text-[11px] font-bold">NOTE: After clicking, you must manually attach your image in the WhatsApp chat.</p>
+                    <input type="text" id="custName" placeholder="Your Full Name" class="w-full bg-gray-50 border-none rounded-2xl p-5 font-bold outline-none ring-1 ring-gray-200 focus:ring-[#ff6b00]">
+                    
+                    <div class="space-y-3">
+                        <label class="font-black uppercase text-[10px] text-gray-400 ml-2">Attach Design (Optional)</label>
+                        <input type="file" id="designFile" accept="image/*" class="w-full bg-gray-50 rounded-2xl p-4 font-bold text-xs file:bg-[#ff6b00] file:text-white file:border-none file:px-4 file:py-2 file:rounded-lg file:mr-4">
+                        <p id="uploadStatus" class="text-[10px] font-bold text-[#ff6b00] uppercase ml-2"></p>
                     </div>
 
-                    <button onclick="sendOrder()" class="w-full bg-[#ff6b00] text-white py-6 rounded-[2.5rem] font-black text-lg uppercase shadow-xl hover:scale-[1.02] transition-all">
+                    <textarea id="custNeeds" placeholder="Explain your design requirements..." class="w-full bg-gray-50 border-none rounded-[2.5rem] p-6 h-40 font-bold outline-none ring-1 ring-gray-200 focus:ring-[#ff6b00]"></textarea>
+
+                    <div class="wa-notice flex items-start gap-3">
+                        <i class="fas fa-paperclip mt-1"></i>
+                        <p class="text-[11px] font-bold">NOTE: The system will record your order. Please also send the image in the WhatsApp chat to confirm.</p>
+                    </div>
+
+                    <button onclick="sendOrder()" id="submitBtn" class="w-full bg-[#ff6b00] text-white py-6 rounded-[2.5rem] font-black text-lg uppercase shadow-xl hover:scale-[1.02] transition-all">
                         Complete Order on WhatsApp <i class="fab fa-whatsapp ml-2"></i>
                     </button>
                 </div>
@@ -149,9 +161,13 @@
             document.getElementById('sizeSection').scrollIntoView({ behavior: 'smooth' });
         }
 
-        function sendOrder() {
+        async function sendOrder() {
             const name = document.getElementById('custName').value;
             const needs = document.getElementById('custNeeds').value;
+            const fileInput = document.getElementById('designFile');
+            const status = document.getElementById('uploadStatus');
+            const btn = document.getElementById('submitBtn');
+
             if (!name) return alert("Please enter your name");
 
             let orderSummary = "";
@@ -162,14 +178,60 @@
                     orderSummary += `[${item.color}: ${size}] `;
                 });
             } else {
-                orderSummary = `Type: ${mugType} | Handle: ${handleType}`;
+                const qty = document.getElementById('mugQty').value;
+                orderSummary = `Type: ${mugType} | Handle: ${handleType} | Qty: ${qty}`;
             }
+
+            // Prepare for Google Sheets
+            let base64 = "";
+            let fileName = "";
+            if (fileInput.files.length > 0) {
+                btn.disabled = true;
+                status.innerText = "⏳ Processing image & recording order...";
+                const file = fileInput.files[0];
+                fileName = file.name;
+                const reader = new FileReader();
+                const filePromise = new Promise(resolve => {
+                    reader.onload = () => resolve(reader.result.split(',')[1]);
+                    reader.readAsDataURL(file);
+                });
+                base64 = await filePromise;
+            }
+
+            // Google Script URL (Replace this after deployment)
+            const GOOGLE_URL = "PASTE_YOUR_DEPLOYED_URL_HERE";
+
+            try {
+                await fetch(GOOGLE_URL, {
+                    method: "POST",
+                    mode: "no-cors",
+                    body: JSON.stringify({
+                        name: name,
+                        product: selectedProduct,
+                        details: orderSummary,
+                        notes: needs,
+                        image: base64,
+                        filename: fileName
+                    })
+                });
+            } catch (e) { console.log("Recorded locally"); }
 
             let waMessage = `*NEW ORDER - PRINT CRAFT*%0A*Customer:* ${name}%0A*Product:* ${selectedProduct}%0A*Details:* ${orderSummary}%0A*Notes:* ${needs}`;
             window.open(`https://wa.me/919322882765?text=${waMessage}`, '_blank');
+            btn.disabled = false;
+            status.innerText = "";
         }
 
-        window.onload = () => { renderColors(); setMugType('Normal'); };
+        window.onload = () => { 
+            renderColors(); 
+            setMugType('Normal'); 
+
+            // Handle URL params from index.html
+            const params = new URLSearchParams(window.location.search);
+            const type = params.get('type');
+            if (type === 'mug') setMugFlow();
+            if (type === 'jersey') { setProduct('T-Shirt'); setMaterial('Jersey'); }
+        };
     </script>
 </body>
 </html>
