@@ -11,99 +11,117 @@
         body { font-family: 'Inter', sans-serif; background-color: #f8f8f8; color: #1a1a1a; scroll-behavior: smooth; }
         .glass-panel { background: white; border-radius: 3rem; border: 1px solid #f0f0f0; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.08); }
         .step-tag { background: #ff6b00; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 900; color: white; text-transform: uppercase; }
+        .active-prod { border-color: #ff6b00 !important; background-color: #fff7ed !important; }
         
-        /* BIG WARNING BOXES */
-        .warning-active { background-color: #ff6b00; color: white; transform: scale(1.02); box-shadow: 0 10px 20px -5px rgba(255, 107, 0, 0.4); }
-        .warning-inactive { background-color: #f3f4f6; color: #9ca3af; opacity: 0.5; }
+        /* BIG DISCLAIMER BOXES */
+        .disclaimer-box { 
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .active-warning { 
+            background-color: #ff6b00 !important; 
+            color: white !important; 
+            transform: scale(1.05);
+            box-shadow: 0 10px 15px -3px rgba(255, 107, 0, 0.3);
+        }
+        .inactive-warning { 
+            background-color: #f3f4f6 !important; 
+            color: #9ca3af !important; 
+            opacity: 0.5; 
+        }
 
         /* DRAG & DROP AREA */
-        #drop-area { border: 3px dashed #e5e7eb; transition: all 0.3s ease; cursor: pointer; }
-        #drop-area.highlight { border-color: #ff6b00; background-color: #fff7ed; }
-        .preview-thumb { width: 70px; height: 70px; object-fit: cover; border-radius: 12px; border: 2px solid #ff6b00; }
+        #drop-area {
+            border: 3px dashed #e5e7eb;
+            transition: all 0.2s ease;
+        }
+        #drop-area.highlight {
+            border-color: #ff6b00;
+            background-color: #fff7ed;
+        }
+        .preview-thumb {
+            width: 80px; height: 80px; object-fit: cover; border-radius: 12px; border: 2px solid #ff6b00;
+        }
     </style>
 </head>
 <body class="min-h-screen py-10 px-4">
 
     <div class="max-w-2xl mx-auto">
         <div class="glass-panel p-8 md:p-12" id="studioPanel">
-            <h1 class="text-5xl font-black tracking-tighter mb-10 uppercase leading-none">Design <br><span class="text-[#ff6b00]">Studio.</span></h1>
+            <h1 class="text-5xl font-black tracking-tighter mb-12 uppercase leading-none">Design <br><span class="text-[#ff6b00]">Studio.</span></h1>
             
-            <div class="space-y-12">
+            <div class="space-y-14">
                 <div class="space-y-6">
-                    <div class="flex items-center gap-3"><span class="step-tag">Step 02</span><label class="font-black uppercase text-xs tracking-widest">Select Material</label></div>
+                    <div class="flex items-center gap-3"><span class="step-tag">Step 02</span><label class="font-black uppercase text-xs tracking-widest">Material & Print Method</label></div>
                     
                     <div class="grid grid-cols-2 gap-4">
                         <div class="space-y-3">
                             <button onclick="setMaterial('Cotton')" id="btnCotton" class="w-full py-5 rounded-3xl font-black uppercase text-xs border-2 border-[#ff6b00] bg-white">Cotton</button>
-                            <div id="warnCotton" class="warning-active p-5 rounded-2xl text-center transition-all">
-                                <i class="fas fa-exclamation-circle block text-2xl mb-1"></i>
-                                <span class="font-black text-[11px] block leading-tight">DTF MONO<br>COLOUR ONLY</span>
+                            <div id="warnCotton" class="disclaimer-box active-warning p-4 rounded-2xl text-center">
+                                <i class="fas fa-exclamation-triangle block text-xl mb-1"></i>
+                                <span class="font-black text-[12px] block leading-tight">DTF MONO<br>COLOUR ONLY</span>
                             </div>
                         </div>
                         <div class="space-y-3">
                             <button onclick="setMaterial('Jersey')" id="btnJersey" class="w-full py-5 rounded-3xl font-black uppercase text-xs border-2 border-gray-100 text-gray-400">Jersey</button>
-                            <div id="warnJersey" class="warning-inactive p-5 rounded-2xl text-center transition-all">
-                                <i class="fas fa-camera block text-2xl mb-1"></i>
-                                <span class="font-black text-[11px] block leading-tight">PHOTO PRINTS<br>ONLY</span>
+                            <div id="warnJersey" class="disclaimer-box inactive-warning p-4 rounded-2xl text-center">
+                                <i class="fas fa-camera block text-xl mb-1"></i>
+                                <span class="font-black text-[12px] block leading-tight">PHOTO PRINTS<br>ONLY</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="space-y-6 pt-6 border-t border-gray-100">
-                    <div class="flex items-center gap-3"><span class="step-tag">Upload</span><label class="font-black uppercase text-xs tracking-widest">Designs (Multiple)</label></div>
+                    <div class="flex items-center gap-3"><span class="step-tag">Upload</span><label class="font-black uppercase text-xs tracking-widest">Drag Designs Here</label></div>
                     
-                    <div id="drop-area" class="rounded-[2.5rem] p-10 text-center bg-gray-50" onclick="document.getElementById('fileInput').click()">
-                        <input type="file" id="fileInput" multiple accept="image/*" class="hidden" onchange="handleFiles(this.files)">
-                        <i class="fas fa-cloud-upload-alt text-5xl text-gray-300 mb-4"></i>
-                        <p class="font-black uppercase text-sm tracking-widest">Drag & Drop Photos</p>
-                        <p class="text-[10px] text-gray-400 font-bold mt-2 uppercase">or click to select multiple files</p>
+                    <div id="drop-area" class="rounded-[2.5rem] p-12 text-center bg-gray-50 cursor-pointer" onclick="document.getElementById('fileElem').click()">
+                        <input type="file" id="fileElem" multiple accept="image/*" class="hidden" onchange="handleFiles(this.files)">
+                        <i class="fas fa-images text-5xl text-gray-300 mb-4"></i>
+                        <p class="font-black uppercase text-sm tracking-widest">Drop Multiple Photos Here</p>
+                        <p class="text-[10px] text-gray-400 font-bold mt-2 uppercase">Or click to select from your device</p>
                         
-                        <div id="previewGallery" class="flex flex-wrap gap-3 justify-center mt-6"></div>
+                        <div id="gallery" class="flex flex-wrap gap-3 justify-center mt-6"></div>
                     </div>
                 </div>
 
                 <div class="space-y-4 pt-6">
-                    <div class="flex items-center gap-3 mb-2"><span class="step-tag">Final</span><label class="font-black uppercase text-xs tracking-widest">Contact Details</label></div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <input type="text" id="custName" placeholder="Full Name *" required class="w-full bg-gray-50 rounded-2xl p-5 font-bold outline-none ring-1 ring-gray-200 focus:ring-[#ff6b00]">
-                        <input type="tel" id="custPhone" placeholder="Mobile Number (10 digits) *" required class="w-full bg-gray-50 rounded-2xl p-5 font-bold outline-none ring-1 ring-gray-200 focus:ring-[#ff6b00]">
+                        <input type="text" id="custName" placeholder="Full Name *" class="w-full bg-gray-50 rounded-2xl p-5 font-bold outline-none ring-1 ring-gray-200 focus:ring-[#ff6b00]">
+                        <input type="tel" id="custPhone" placeholder="Mobile Number *" class="w-full bg-gray-50 rounded-2xl p-5 font-bold outline-none ring-1 ring-gray-200 focus:ring-[#ff6b00]">
                     </div>
-                    
-                    <button onclick="sendOrder()" id="submitBtn" class="w-full bg-[#ff6b00] text-white py-6 rounded-[2.5rem] font-black text-lg uppercase shadow-xl hover:bg-black transition-all mt-4">
-                        Confirm & Place Order
-                    </button>
-                    <p id="statusTxt" class="text-center text-[10px] font-black uppercase text-gray-400 mt-2"></p>
+                    <button onclick="sendOrder()" id="submitBtn" class="w-full bg-[#ff6b00] text-white py-6 rounded-[2.5rem] font-black text-lg uppercase shadow-xl hover:bg-black transition-all">Place Order</button>
                 </div>
             </div>
         </div>
 
         <div id="successPanel" class="hidden glass-panel p-20 text-center">
-            <div class="w-24 h-24 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                <i class="fas fa-check text-4xl"></i>
-            </div>
+            <i class="fas fa-check-circle text-6xl text-green-500 mb-6"></i>
             <h2 class="text-3xl font-black uppercase">Order Received!</h2>
-            <p class="text-gray-500 font-bold mt-4">We will process your designs and contact you shortly.</p>
+            <p class="text-gray-500 font-bold mt-4">We will contact you shortly.</p>
         </div>
     </div>
 
     <script>
-        let currentMaterial = 'Cotton';
-        let selectedFiles = [];
+        let selectedMaterial = 'Cotton';
+        let filesToUpload = [];
 
-        // --- Warning Toggle ---
+        // 1. BIG WARNING TOGGLE
         function setMaterial(m) {
-            currentMaterial = m;
+            selectedMaterial = m;
             const isCotton = m === 'Cotton';
+            
+            // Buttons
             document.getElementById('btnCotton').className = isCotton ? 'w-full py-5 rounded-3xl font-black uppercase text-xs border-2 border-[#ff6b00] bg-white' : 'w-full py-5 rounded-3xl font-black uppercase text-xs border-2 border-gray-100 text-gray-400';
             document.getElementById('btnJersey').className = !isCotton ? 'w-full py-5 rounded-3xl font-black uppercase text-xs border-2 border-[#ff6b00] bg-white' : 'w-full py-5 rounded-3xl font-black uppercase text-xs border-2 border-gray-100 text-gray-400';
-            
-            document.getElementById('warnCotton').className = isCotton ? 'warning-active p-5 rounded-2xl text-center transition-all' : 'warning-inactive p-5 rounded-2xl text-center transition-all';
-            document.getElementById('warnJersey').className = !isCotton ? 'warning-active p-5 rounded-2xl text-center transition-all' : 'warning-inactive p-5 rounded-2xl text-center transition-all';
+
+            // Warning Boxes
+            document.getElementById('warnCotton').className = isCotton ? 'disclaimer-box active-warning p-4 rounded-2xl text-center' : 'disclaimer-box inactive-warning p-4 rounded-2xl text-center';
+            document.getElementById('warnJersey').className = !isCotton ? 'disclaimer-box active-warning p-4 rounded-2xl text-center' : 'disclaimer-box inactive-warning p-4 rounded-2xl text-center';
         }
 
-        // --- Multiple File Handler ---
-        const dropArea = document.getElementById('drop-area');
+        // 2. DRAG & DROP LOGIC
+        let dropArea = document.getElementById('drop-area');
 
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(e => {
             dropArea.addEventListener(e, (ev) => { ev.preventDefault(); ev.stopPropagation(); }, false);
@@ -120,71 +138,50 @@
         dropArea.addEventListener('drop', (e) => handleFiles(e.dataTransfer.files), false);
 
         function handleFiles(files) {
-            selectedFiles = [...files];
-            const gallery = document.getElementById('previewGallery');
+            filesToUpload = [...files];
+            let gallery = document.getElementById('gallery');
             gallery.innerHTML = '';
-            
-            selectedFiles.forEach(file => {
-                const reader = new FileReader();
+            filesToUpload.forEach(file => {
+                let reader = new FileReader();
                 reader.readAsDataURL(file);
                 reader.onloadend = () => {
-                    const img = document.createElement('img');
+                    let img = document.createElement('img');
                     img.src = reader.result;
                     img.className = 'preview-thumb';
                     gallery.appendChild(img);
-                };
+                }
             });
         }
 
-        // --- Final Submission ---
+        // 3. SEND DATA
         async function sendOrder() {
             const name = document.getElementById('custName').value;
             const phone = document.getElementById('custPhone').value;
+            if(!name || !phone || filesToUpload.length === 0) return alert("Fill all fields and add photos!");
+
             const btn = document.getElementById('submitBtn');
-            const status = document.getElementById('statusTxt');
+            btn.disabled = true; btn.innerText = "UPLOADING...";
 
-            if (!name || !phone || selectedFiles.length === 0) {
-                alert("Please fill in your name, phone, and upload at least one photo.");
-                return;
-            }
-
-            btn.disabled = true;
-            btn.innerText = "UPLOADING ALL DESIGNS...";
-            status.innerText = `⏳ Sending ${selectedFiles.length} files to database...`;
-
-            let imagesArray = [];
-            for (let file of selectedFiles) {
-                const base64 = await new Promise(resolve => {
+            let imagesData = [];
+            for (let file of filesToUpload) {
+                const base64 = await new Promise(r => {
                     const reader = new FileReader();
-                    reader.onload = () => resolve(reader.result.split(',')[1]);
+                    reader.onload = () => r(reader.result.split(',')[1]);
                     reader.readAsDataURL(file);
                 });
-                imagesArray.push({ name: file.name, data: base64 });
+                imagesData.push({ name: file.name, data: base64 });
             }
 
-            // Ensure this URL matches your latest Google Script Deployment
             const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwlbk-H2Drqq4fDQHMcDo5c6f0C6IZpkKDJw19SptTcHSNOq_x8i6Z1HNQL-Hs8-Tqx/exec";
-
-            try {
-                await fetch(SCRIPT_URL, {
-                    method: "POST",
-                    mode: "no-cors",
-                    body: JSON.stringify({
-                        name: name,
-                        phone: phone,
-                        product: "T-Shirt",
-                        details: `Material: ${currentMaterial}`,
-                        images: imagesArray
-                    })
-                });
+            
+            fetch(SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors",
+                body: JSON.stringify({ name, phone, product: "T-Shirt", details: selectedMaterial, images: imagesData })
+            }).then(() => {
                 document.getElementById('studioPanel').classList.add('hidden');
                 document.getElementById('successPanel').classList.remove('hidden');
-                window.scrollTo(0,0);
-            } catch (e) {
-                alert("Upload failed. Check your internet connection.");
-                btn.disabled = false;
-                btn.innerText = "Confirm & Place Order";
-            }
+            });
         }
     </script>
 </body>
